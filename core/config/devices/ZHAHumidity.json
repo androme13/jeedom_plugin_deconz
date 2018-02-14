@@ -1,0 +1,34 @@
+{
+    "name": "Humidité",
+    "configuration": {
+		"swversion": "",
+		"type": "",
+		"uniqueid": "",
+		"origID": 0,
+		"type": "", 
+		"manufacturername": "",
+		"modelid": ""	
+    },
+    "commands": [
+        {
+            "name": "Etat humidité", 
+            "type": "info", 
+            "isVisible": 1, 
+            "isHistorized": 1,
+			"unite": "%",			
+            "configuration": {
+			    "fieldname" : "humidity",
+				"minValue": 0, 
+				"maxValue": 100		
+            }, 
+            "subtype": "numeric", 
+            "display": {
+                "generic_type": "HUMIDITY"
+            },
+			"template":{
+				"dashboard" : "tile",
+				"mobile" : "tile"
+			}
+        }		
+    ]
+}

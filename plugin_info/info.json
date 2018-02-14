@@ -1,0 +1,14 @@
+{
+    "id": "deconz",
+    "name": "deCONZ",
+    "description": "Plugin deCONZ pour la gestion des équipement ZigBee",
+    "licence": "AGPL",
+    "author": "Thierry MATHIEU",
+    "require": "3.1",
+    "category": "automation protocol",
+    "hasDependency": true,
+    "hasOwnDeamon": true,
+    "maxDependancyInstallTime": 0,
+    "changelog": "https://jeedom.github.io/plugin-template/#language#/changelog",
+    "documentation": "https://jeedom.github.io/plugin-template/#language#/"
+}

@@ -1,0 +1,31 @@
+{
+    "name": "Pression",
+    "configuration": {
+		"swversion": "",
+		"type": "",
+		"uniqueid": "",
+		"origID": 0,
+		"type": "", 
+		"manufacturername": "",
+		"modelid": ""	
+    },
+    "commands": [
+        {
+            "name": "Etat pression", 
+            "type": "info", 
+            "isVisible": 1, 
+            "isHistorized": 1,			
+            "configuration": {
+			    "fieldname" : "pressure"
+            }, 
+            "subtype": "numeric", 
+            "display": {
+                "generic_type": "PRESSURE"
+            },
+			"template":{
+				"dashboard" : "tile",
+				"mobile" : "tile"
+			}
+        }		
+    ]
+}
