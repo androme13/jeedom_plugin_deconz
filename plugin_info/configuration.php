@@ -24,12 +24,20 @@ if (!isConnect()) {
 ?>
 <div id='div_configurationAlert' style="display: none;"></div>
 <div class="container">
-    <h2>Aide à la configuration: 3 étapes pour configurer le plugin</h2>
+    <h2>Configuration: 3 étapes pour configurer le plugin</h2>
     <div class="progress">
         <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <div class="alert alert-success hide"></div>
     <form id="register_form" novalidate action="form_action.php" method="post">
+         <fieldset>
+            <h2>Introduction: Aide à la configuration de DeCONZ</h2>
+            <div class="form-group">
+                <label for="ip">adresse IP de la passerelle</label>
+                <input type="ip" class="form-control" required id="ip" name="ip" placeholder="Ip">
+            </div>
+            <input type="button" class="next-form btn btn-info" value="Commencer" />
+        </fieldset>
         <fieldset>
             <h2>Etape 1: Chercher la passerelle DeCONZ</h2>
             <div class="form-group">
@@ -40,6 +48,7 @@ if (!isConnect()) {
                 <label for="port">Port de la passerelle</label>
                 <input type="port" class="form-control" name="port" id="port" placeholder="Port">
             </div>
+            <input type="button" name="previous" class="previous-form btn btn-default" value="Précedent" />            
             <input type="button" class="next-form btn btn-info" value="suivant" />
         </fieldset>
         <fieldset>

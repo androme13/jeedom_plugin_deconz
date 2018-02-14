@@ -19,12 +19,22 @@ $(document).ready(function () {
     //$('.progress-bar').css({ 'background': 'SteelBlue' });
     var form_count = 1, previous_form, next_form, total_forms;
     total_forms = 3;
+    $(".progress-bar").hide();
     $(".next-form").click(function () {
         previous_form = $(this).parent();
         next_form = $(this).parent().next();
         next_form.show();
         previous_form.hide();
+       /* if (form_count > 2) {
+            form_count--;
+        }*/
+        //form_count--;
         setProgressBarValue(++form_count);
+        if (form_count === 1) {
+            $(".progress-bar").hide();
+        } else {
+            $(".progress-bar").show();
+        }
         initialStepAction(form_count);
     });
     $(".previous-form").click(function () {
@@ -32,17 +42,29 @@ $(document).ready(function () {
         next_form = $(this).parent().prev();
         next_form.show();
         previous_form.hide();
+       /* if (form_count > 2) {
+            form_count--;
+        }*/
+        //form_count--;
         setProgressBarValue(--form_count);
+        if (form_count === 1) {
+            $(".progress-bar").hide();
+        } else {
+            $(".progress-bar").show();
+        }
         initialStepAction(form_count);
     });
     setProgressBarValue(form_count);
     function setProgressBarValue(value) {
+        if (value>1){
+            value--;
+        }
         var percent = parseFloat(100 / total_forms) * value;
         percent = percent.toFixed();
         $(".progress-bar")
                 .css("width", percent + "%")
                 //.html(percent+"%");
-                .html("Etape : " + form_count + "/3");
+                .html("Etape : " + (form_count - 1) + "/3");
     }
     // Handle form submit and validation
     $("#register_form").submit(function (event) {
@@ -72,15 +94,19 @@ function initialStepAction(form_count) {
     switch (form_count) {
         case 1 :
         {
-            var deconzcall = new deconzCall();
-            deconzcall.deconzSearch(step2Process);
             break;
         }
         case 2 :
         {
+            var deconzcall = new deconzCall();
+            deconzcall.deconzSearch(step2Process);
             break;
         }
         case 3 :
+        {
+            break;
+        }
+        case 4 :
         {
             break;
         }
