@@ -16,12 +16,13 @@
 
 class deconzCall {
     string2JSON(string) {
+
         try
         {
             return JSON.parse(string.replace('\"', '"'));
         } catch (e)
         {
-            return 'invalid json';
+            return 'Chaine json invalide';
         }
     }
     deconzSearch(callback) {
@@ -35,20 +36,52 @@ class deconzCall {
             },
             dataType: 'json',
             error: function (resp, status, error) {
-                var jeedomTools = new jeedomHelper();
-                jeedomTools.log('deconz', 'error', url + ' : ' + error + ' (' + resp.status + ')');
-                var response = new Object();
-                response.state = "nok";
-                response.status = status;
-                response.error = error;
-                response.code = resp.status;
-                response.url = url;
-                callback(response);
+                me.deconzGenericAjaxError(url, resp, status, error, callback)
             },
             success: function (resp, status) {
-                resp.result = me.string2JSON(resp.result);
-                callback(resp);
+                me.deconzGenericAjaxSuccess(resp, callback);
             }
         });
     }
+
+    deconzGetAPIKey(callback) {
+        var me = this;
+        var url = "plugins/deconz/core/ajax/deconzCall.ajax.php";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                action: "getAPIKey",
+            },
+            dataType: 'json',
+            error: function (resp, status, error) {
+                me.deconzGenericAjaxError(url, resp, status, error, callback)
+            },
+            success: function (resp) {
+                me.deconzGenericAjaxSuccess(resp, callback, url);
+            }
+        });
+    }
+
+    deconzGenericAjaxError(url, resp, status, error, callback) {
+        var jeedomTools = new jeedomHelper();
+        jeedomTools.log('deconz', 'error', url + ' : ' + error + ' (' + resp.status + ')');
+        var response = new Object();
+        response.state = "nok";
+        response.status = status;
+        response.error = error;
+        response.code = resp.status;
+        response.url = url;
+        callback(response);
+    }
+
+    deconzGenericAjaxSuccess(resp, callback, url) {
+        console.log("deconzGenericAjaxSuccess", resp);
+        if (resp.state === "ok") {
+            resp.result = this.string2JSON(resp.result);
+        }
+        resp.url = url;
+        callback(resp);
+    }
+
 }

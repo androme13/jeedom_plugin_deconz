@@ -83,24 +83,31 @@ $(document).ready(function () {
 
 function initialStepAction(form_count) {
     // console.log(form_count);
+    var deconzcall = new deconzCall();
     switch (form_count) {
         case 1 :
         {
+            $('#div_configurationAlert').hideAlert();
+            step1Process();
             break;
         }
         case 2 :
         {
-            $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, recherche de DeCONZ en cours ...', level: 'info'});
-            var deconzcall = new deconzCall();
+            $('#div_configurationAlert').hideAlert();
+            $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, recherche de DeCONZ en cours ...', level: 'info'});           
             deconzcall.deconzSearch(step2Process);
             break;
         }
         case 3 :
         {
+            $('#div_configurationAlert').hideAlert();
+            $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, tentative d\'obtention de la clé API de DeCONZ en cours ...', level: 'info'});
+            deconzcall.deconzGetAPIKey(step3Process);
             break;
         }
         case 4 :
         {
+            $('#div_configurationAlert').hideAlert();
             break;
         }
     }

@@ -26,27 +26,30 @@ try {
     }
 
     ajax::init();
-    switch (init('action')) {
+    $action = init('action');
+    $error = 'Aucune méthode correspondante à : '.$action;
+    switch ($action) {
         case 'deconzSearch' :
             $com = new deconzCom();
             $resp = $com->findDeCONZ();
             $error = 'findDeCONZ Error';
             break;
     }
-    if (!isset($resp)) {        
-        ajax::error($error);       
+    if (!isset($resp)) {
+        ajax::error($error);
     } else {
-       if ($resp->state === "nok") {
-            ajax::error($resp->message);
-        } else {
+        if ($resp->state === "ok") {
             ajax::success($resp->message);
+        } else {
+            ajax::error($resp->message);
         }
     }
-    
 
+    //ajax::error('Aucune méthode correspondante à : ');
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */
 } catch (Exception $e) {
+    //ajax::error($e->getCode());
     ajax::error(displayExeption($e), $e->getCode());
 }
 

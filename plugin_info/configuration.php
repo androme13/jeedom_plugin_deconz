@@ -24,25 +24,25 @@ if (!isConnect()) {
 ?>
 <div id='div_configurationAlert' style="display: none;"></div>
 <div class="container">
-    <h2>Configuration: 3 étapes pour configurer le plugin</h2>
+    <center><h2>Aide à la configuration de DeCONZ</h2></center>
     <div class="progress">
         <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <div class="alert alert-success hide"></div>
     <form id="register_form" novalidate action="form_action.php" method="post">
          <fieldset>
-            <h2>Introduction: Aide à la configuration de DeCONZ</h2>
+            <h2>Configuration: 3 étapes pour configurer le plugin</h2>
             <div class="form-group">
-                La configuration se déroule en 3 étapes, un assistant vous y aidant<br>
-                Etape 1:<br>
+                La configuration se déroule en 3 étapes, un assistant vous y aidant.<br>
+                <br><b><span style="text-decoration: underline;">Etape 1:</span></b><br>
                 Une recherche automatique de DeCONZ sera effectuée,<br>
                 si la recherche automatique echoue vous serez invité<br>
                 à saisir l'ip et le port de DeCONZ manuellement.<br>
-                Etape 2:<br>
-                Une recherche automatique de la clé sera effectuée,<br>
-                si la recherche automatique echoue vous serez invité<br>
-                à saisir la clé APIKEY de DeCONZ manuellement.<br>
-                Etape 3:<br>
+                <br><b><span style="text-decoration: underline;">Etape 2:</span></b><br>
+                Une demande automatique de la clé sera effectuée,<br>
+                si la demande automatique echoue vous serez invité<br>
+                à obtenir et à saisir la clé APIKEY de DeCONZ manuellement.<br>
+                <br><b><span style="text-decoration: underline;">Etape 3:</span></b><br>
                 Verification et validation des informations avant la sauvegarde<br>
                 des règlages.<br>
             </div>

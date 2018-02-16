@@ -22,7 +22,7 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class deconz extends eqLogic {
 	public function test(){
 		//jeedom::getTmpFolder('deconz');
-		log::remove('deconz');
+		//log::remove('deconz');
 		////exec('sudo echo 1 > /tmp/deconz');
 		//log::add('deconz', 'error', 'essai de log ERROR');
 		//log::add('deconz', 'info', 'essai de log info','');
