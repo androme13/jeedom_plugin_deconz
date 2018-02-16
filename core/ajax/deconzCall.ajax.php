@@ -30,12 +30,11 @@ try {
         case 'deconzSearch' :
             $com = new deconzCom();
             $resp = $com->findDeCONZ();
-            //$resp = json_encode($donneesAEncoder, JSON_FORCE_OBJECT);
-            //$resp = RaspBEE::createEqLogic(init('device'), init('syncType'));
+            $error = 'findDeCONZ Error';
             break;
     }
     if (!isset($resp)) {        
-        ajax::error("no response");       
+        ajax::error($error);       
     } else {
        if ($resp->state === "nok") {
             ajax::error($resp->message);

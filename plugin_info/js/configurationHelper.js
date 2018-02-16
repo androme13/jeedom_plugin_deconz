@@ -15,7 +15,11 @@
  * along with Plugin DeCONZ for jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function step2Process(resp){
-    console.log("step2Process()");
-    console.dir(resp);
+function step2Process(resp) {
+    if (resp.state === 'ok') {
+        $('#div_configurationAlert').showAlert({message: '{{DeCONZ trouvé}} : ' + resp.result[0].name + ' ( {{Id}}=' + resp.result[0].id + ', {{Mac}}=' + resp.result[0].macaddress + ')', level: 'success'});
+    } else {
+        $('#div_configurationAlert').showAlert({message: '{{DeCONZ introuvable}} : ' + 'Erreur : ' + resp.url + ' ' + resp.error+' (' + resp.code + ')', level: 'danger'});
+       
+    }
 }

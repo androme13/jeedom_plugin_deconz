@@ -143,8 +143,7 @@ class deconzCom {
         $error = curl_error($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        //error_log("genericResponseProcess result : ".$result,3,"/tmp/prob.txt");
-        $response = $responseHelper;
+       // $response = $responseHelper;
         if ($result === false) {
             $response->state = "nok";
             $response->error = $httpcode;
@@ -153,11 +152,13 @@ class deconzCom {
         } else {
             $response->state = "ok";
             $response->error = $httpcode;
-            if ($response->error != '200')
+            if ($response->error != '200') {
                 $response->state = "nok";
+            }
             $response->message = $result;
-            if ($response->message == '')
+            if ($response->message == '') {
                 $response->message = strval($response->error);
+            }
             return $response;
         }
     }
@@ -176,8 +177,9 @@ class deconzCom {
             CURLOPT_CONNECTTIMEOUT => 30
         ];
         $response = self::genericResponseProcess($opts);
-        if ($response->state == "ok")
+        if ($response->state == "ok") {
             return $response;
+        }
         // si la premère méthode échoue on passe à la seconde
         //user et pwd par défaut
         $usr = "delight";
@@ -241,10 +243,12 @@ class deconzCom {
 
     public function permitJoin($state = 254) {
         $state = intval($state);
-        if ($state < 0)
+        if ($state < 0) {
             $state = 0;
-        if ($state > 255)
+        }
+        if ($state > 255) {
             $state = 255;
+        }
         $command = '{permitjoin:' . $state . '}';
         return self::genericPut("http://" . $this->ip . "/api/" . $this->apikey . "/config/", $state);
     }
@@ -256,13 +260,16 @@ class deconzCom {
     public function sendCommand($type = null, $id = null, $command = null) {
         //error_log("sendLightCommand(".$id.":".$command.")",3,"/tmp/prob.txt");
         $url = 'http://' . $this->ip . '/api/' . $this->apikey . '/' . $type . '/' . $id;
-        if ($type == "groups")
+        if ($type == "groups") {
             $url = $url . "/action";
-        if ($type != "groups")
+        }
+        if ($type != "groups") {
             $url = $url . "/state";
+        }
         error_log("url :" . $url, 3, "/tmp/prob.txt");
-        if ($id === null || $command === null || $type === null)
+        if ($id === null || $command === null || $type === null) {
             return false;
+        }
         $ch = curl_init();
         $opts = [
             CURLOPT_SSL_VERIFYPEER => false,
@@ -288,4 +295,3 @@ class deconzCom {
 
 }
 
-?>

@@ -25,10 +25,6 @@ $(document).ready(function () {
         next_form = $(this).parent().next();
         next_form.show();
         previous_form.hide();
-       /* if (form_count > 2) {
-            form_count--;
-        }*/
-        //form_count--;
         setProgressBarValue(++form_count);
         if (form_count === 1) {
             $(".progress-bar").hide();
@@ -42,10 +38,6 @@ $(document).ready(function () {
         next_form = $(this).parent().prev();
         next_form.show();
         previous_form.hide();
-       /* if (form_count > 2) {
-            form_count--;
-        }*/
-        //form_count--;
         setProgressBarValue(--form_count);
         if (form_count === 1) {
             $(".progress-bar").hide();
@@ -98,6 +90,7 @@ function initialStepAction(form_count) {
         }
         case 2 :
         {
+            $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, recherche de DeCONZ en cours ...', level: 'info'});
             var deconzcall = new deconzCall();
             deconzcall.deconzSearch(step2Process);
             break;

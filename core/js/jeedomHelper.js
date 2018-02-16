@@ -32,9 +32,6 @@ class jeedomHelper {
                 consoleMessage += "\n";
                 consoleMessage += "\tCause : " + url + ' ' + erreur + ' (' + resp.status + ')';
                 console.log(consoleMessage);
-                //console.dir(resp);
-                //console.log('jeedom4JS '+'('+new Date+') : impossible d\'inscrire un log (Nom : "'+logName + '", Level : "' + level + '", Msg : "' + message+'")');                
-                //handleAjaxError(resp, statut, erreur);
             },
             success: function (resp, status) {
                 if (resp.state !== 'ok') {                    

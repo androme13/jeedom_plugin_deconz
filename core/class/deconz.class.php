@@ -24,9 +24,9 @@ class deconz extends eqLogic {
 		//jeedom::getTmpFolder('deconz');
 		log::remove('deconz');
 		////exec('sudo echo 1 > /tmp/deconz');
-		log::add('deconz', 'error', 'essai de log ERROR');
-		log::add('deconz', 'info', 'essai de log info','');
-		log::add('deconz', 'debug', 'essai de log debug','');
+		//log::add('deconz', 'error', 'essai de log ERROR');
+		//log::add('deconz', 'info', 'essai de log info','');
+		//log::add('deconz', 'debug', 'essai de log debug','');
 	}
     /*     * *************************Attributs****************************** */
 	

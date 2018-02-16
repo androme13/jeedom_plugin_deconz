@@ -15,7 +15,17 @@
  */
 
 class deconzCall {
+    string2JSON(string) {
+        try
+        {
+            return JSON.parse(string.replace('\"', '"'));
+        } catch (e)
+        {
+            return 'invalid json';
+        }
+    }
     deconzSearch(callback) {
+        var me = this;
         var url = "plugins/deconz/core/ajax/deconzCall.ajax.php";
         $.ajax({
             type: "POST",
@@ -24,26 +34,20 @@ class deconzCall {
                 action: "deconzSearch"
             },
             dataType: 'json',
-            error: function (resp, status, erreur) {
-                $('#div_configurationAlert').showAlert({message: '{{Erreur}} : ' + url + ' ' + erreur + ' (' + resp.status + ')', level: 'danger'});
+            error: function (resp, status, error) {
                 var jeedomTools = new jeedomHelper();
-                jeedomTools.log('deconz', 'error', url + ' ' + erreur + ' (' + resp.status + ')');
+                jeedomTools.log('deconz', 'error', url + ' : ' + error + ' (' + resp.status + ')');
+                var response = new Object();
+                response.state = "nok";
+                response.status = status;
+                response.error = error;
+                response.code = resp.status;
+                response.url = url;
+                callback(response);
             },
             success: function (resp, status) {
-                try
-                {
-                    var cleanResp = JSON.parse(resp.result.replace('\"', '"'));
-                } catch (e)
-                {
-                    var cleanResp = 'invalid json';
-                }
-                if (resp.state === 'ok') {
-                    callback(resp);
-                    $('#div_configurationAlert').showAlert({message: '{{Passerelle trouvée}} : ' + cleanResp[0].name + ' ( {{Id}}=' + cleanResp[0].id + ', {{Mac}}=' + cleanResp[0].macaddress + ')', level: 'success'});
-                } else {
-                    callback(resp);
-                    $('#div_configurationAlert').showAlert({message: '{{Passerelle introuvable}} : ' + HTMLClean(resp.result), level: 'danger'});
-                }
+                resp.result = me.string2JSON(resp.result);
+                callback(resp);
             }
         });
     }

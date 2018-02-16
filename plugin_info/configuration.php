@@ -33,8 +33,18 @@ if (!isConnect()) {
          <fieldset>
             <h2>Introduction: Aide à la configuration de DeCONZ</h2>
             <div class="form-group">
-                <label for="ip">adresse IP de la passerelle</label>
-                <input type="ip" class="form-control" required id="ip" name="ip" placeholder="Ip">
+                La configuration se déroule en 3 étapes, un assistant vous y aidant<br>
+                Etape 1:<br>
+                Une recherche automatique de DeCONZ sera effectuée,<br>
+                si la recherche automatique echoue vous serez invité<br>
+                à saisir l'ip et le port de DeCONZ manuellement.<br>
+                Etape 2:<br>
+                Une recherche automatique de la clé sera effectuée,<br>
+                si la recherche automatique echoue vous serez invité<br>
+                à saisir la clé APIKEY de DeCONZ manuellement.<br>
+                Etape 3:<br>
+                Verification et validation des informations avant la sauvegarde<br>
+                des règlages.<br>
             </div>
             <input type="button" class="next-form btn btn-info" value="Commencer" />
         </fieldset>
