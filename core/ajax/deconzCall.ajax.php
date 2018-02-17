@@ -36,6 +36,7 @@ try {
             break;
     }
     if (!isset($resp)) {
+        log::add('deconz', 'warning', __FILE__.' : '.$error);
         ajax::error($error);
     } else {
         if ($resp->state === "ok") {

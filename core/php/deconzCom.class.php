@@ -143,7 +143,7 @@ class deconzCom {
         $error = curl_error($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-       // $response = $responseHelper;
+        // $response = $responseHelper;
         if ($result === false) {
             $response->state = "nok";
             $response->error = $httpcode;
@@ -294,4 +294,3 @@ class deconzCom {
     }
 
 }
-

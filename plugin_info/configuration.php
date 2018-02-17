@@ -29,60 +29,74 @@ if (!isConnect()) {
         <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <div class="alert alert-success hide"></div>
-    <form id="register_form" novalidate action="form_action.php" method="post">
-         <fieldset>
-            <h2>Configuration: 3 étapes pour configurer le plugin</h2>
-            <div class="form-group">
-                La configuration se déroule en 3 étapes, un assistant vous y aidant.<br>
-                <br><b><span style="text-decoration: underline;">Etape 1:</span></b><br>
-                Une recherche automatique de DeCONZ sera effectuée,<br>
-                si la recherche automatique echoue vous serez invité<br>
-                à saisir l'ip et le port de DeCONZ manuellement.<br>
-                <br><b><span style="text-decoration: underline;">Etape 2:</span></b><br>
-                Une demande automatique de la clé sera effectuée,<br>
-                si la demande automatique echoue vous serez invité<br>
-                à obtenir et à saisir la clé APIKEY de DeCONZ manuellement.<br>
-                <br><b><span style="text-decoration: underline;">Etape 3:</span></b><br>
-                Verification et validation des informations avant la sauvegarde<br>
-                des règlages.<br>
-            </div>
-            <input type="button" class="next-form btn btn-info" value="Commencer" />
-        </fieldset>
-        <fieldset>
-            <h2>Etape 1: Chercher la passerelle DeCONZ</h2>
-            <div class="form-group">
-                <label for="ip">adresse IP de la passerelle</label>
-                <input type="ip" class="form-control" required id="ip" name="ip" placeholder="Ip">
-            </div>
-            <div class="form-group">
-                <label for="port">Port de la passerelle</label>
-                <input type="port" class="form-control" name="port" id="port" placeholder="Port">
-            </div>
-            <input type="button" name="previous" class="previous-form btn btn-default" value="Précedent" />            
-            <input type="button" class="next-form btn btn-info" value="suivant" />
-        </fieldset>
-        <fieldset>
-            <h2> Etape 2: Obtenir une clé d'accès</h2>
-            <div class="form-group">
-                <label for="key">Clé API</label>
-                <input type="text" class="form-control" name="key" id="key" placeholder="Clé API">
-            </div>
-            <input type="button" name="previous" class="previous-form btn btn-default" value="Précedent" />
-            <input type="button" name="next" class="next-form btn btn-info" value="suivant" />
-        </fieldset>
-        <fieldset>
-            <h2>Etape 3: Validation des informations</h2>
+    <table class="table">
+        <td>
+            <form id="register_form" novalidate action="form_action.php" method="post">
+                <fieldset>
+                    <h2>Configuration: 3 étapes pour configurer le plugin</h2>
+                    <div class="form-group">
+                        La configuration se déroule en 3 étapes, un assistant vous y aidant.<br>
+                        <br><b><span style="text-decoration: underline;">Etape 1:</span></b><br>
+                        Une recherche automatique de DeCONZ sera effectuée,<br>
+                        si la recherche automatique echoue vous serez invité<br>
+                        à saisir l'ip et le port de DeCONZ manuellement.<br>
+                        <br><b><span style="text-decoration: underline;">Etape 2:</span></b><br>
+                        Une demande automatique de la clé sera effectuée,<br>
+                        si la demande automatique echoue vous serez invité<br>
+                        à obtenir et à saisir la clé APIKEY de DeCONZ manuellement.<br>
+                        <br><b><span style="text-decoration: underline;">Etape 3:</span></b><br>
+                        Verification et validation des informations avant la sauvegarde<br>
+                        des règlages.<br>
+                    </div>
+                    <input type="button" class="next-form btn btn-info" value="Commencer" />
+                </fieldset>
+                <fieldset>
+                    <h2>Etape 1: Recherche des contrôleurs DeCONZ</h2>
+                    <table class="table" id="deconzListTable">
+                        <tr>
+                            <th>Action</th>
+                            <th>Id</th>
+                            <th>Nom</th>
+                            <th>Ip</th>
+                            <th>Port</th>
+                            <th>Mac</th>
+                        </tr>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <input type="button" name="previous" class="previous-form btn btn-default" value="Précedent" />            
+                    <input type="button" class="next-form btn btn-info" value="suivant" />
+                </fieldset>
+                <fieldset>
+                    <h2> Etape 2: Obtenir une clé d'accès</h2>
+                    <div class="form-group">
+                        <label for="key">Clé API</label>
+                        <input type="text" class="form-control" name="key" id="key" placeholder="Clé API">
+                    </div>
+                    <input type="button" name="previous" class="previous-form btn btn-default" value="Précedent" />
+                    <input type="button" name="next" class="next-form btn btn-info" value="suivant" />
+                </fieldset>
+                <fieldset>
+                    <h2>Etape 3: Validation des informations</h2>
 
-            <table class="table ">
-                <tr><td class="col-sm-2"><span class="label control-label" style="font-size : 1em;">Adresse IP de DeCONZ</span></td><td><span class="label label-default" style="font-size : 1em;">value</span></tr>
-                <tr><td class="col-sm-2"><span class="label control-label" style="font-size : 1em;">Port DeCONZ</span></td><td><span class="label label-default" style="font-size : 1em;">value</span></tr>
-                <tr><td class="col-sm-2"><span class="label control-label" style="font-size : 1em;">Clé API de DeCONZ</span></td><td><span class="label label-default" style="font-size : 1em;">value</span></tr>
-            </table>
+                    <table class="table">
+                        <tr><td class="col-sm-2"><span class="label control-label" style="font-size : 1em;">Adresse IP de DeCONZ</span></td><td><span class="label label-default" style="font-size : 1em;">value</span></tr>
+                        <tr><td class="col-sm-2"><span class="label control-label" style="font-size : 1em;">Port DeCONZ</span></td><td><span class="label label-default" style="font-size : 1em;">value</span></tr>
+                        <tr><td class="col-sm-2"><span class="label control-label" style="font-size : 1em;">Clé API de DeCONZ</span></td><td><span class="label label-default" style="font-size : 1em;">value</span></tr>
+                    </table>
 
-            <input type="button" name="previous" class="previous-form btn btn-default" value="Précedent" />
-            <input type="submit" name="next" class="submit btn btn-success" value="Verifier les informations" />
-        </fieldset>
-    </form>
+                    <input type="button" name="previous" class="previous-form btn btn-default" value="Précedent" />
+                    <input type="submit" name="next" class="submit btn btn-success" value="Verifier les informations" />
+                </fieldset>
+            </form>
+        </td>
+        <td>
+            <b><span style="text-decoration: underline;">Etape 1:</span></b><br>
+            Une recherche automatique de DeCONZ sera effectuée,<br>
+            si la recherche automatique echoue vous serez invité<br>
+            à saisir l'ip et le port de DeCONZ manuellement.
+        </td>
+    </table>
 </div>
 
 <?php include_file('core', 'deconzCall', 'js', 'deconz'); ?>
