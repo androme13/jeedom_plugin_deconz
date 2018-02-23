@@ -76,7 +76,6 @@ class deconzCall {
     }
 
     deconzGenericAjaxSuccess(resp, callback, url) {
-        console.log("deconzGenericAjaxSuccess", resp);
         if (resp.state === "ok") {
             resp.result = this.string2JSON(resp.result);
         }
