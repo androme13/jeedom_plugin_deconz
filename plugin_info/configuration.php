@@ -67,19 +67,18 @@ if (!isConnect()) {
                 <fieldset>
                     <h2> Etape 2: Obtenir une clé d'accès</h2>
                     <div class="form-group">
-                        <label for="key">Clé API</label>
-                        <input type="text" class="form-control" name="key" id="key" placeholder="Clé API">
                         <table class="table" id="apiKeyTable">
-                        <tr>
-                            <th>Id</th>
-                            <th>Nom</th>
-                            <th>Ip</th>
-                            <th>Mac</th>
-                            <th>Api Key</th>                           
-                        </tr>
-                        <tbody>
-                        </tbody>
-                    </table>
+                            <tr>
+                                <th>Action</th>
+                                <th>Id</th>
+                                <th>Nom</th>
+                                <th>Ip</th>
+                                <th>Mac</th>
+                                <th>Api Key</th>                           
+                            </tr>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                     <a name="previous" class="previous-form btn btn-default fa fa-step-backward"> Précédent</a>
                     <a name="next" class="next-form btn btn-info fa fa-step-forward"> Suivant</a>

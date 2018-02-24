@@ -51,17 +51,17 @@ function step2Process(resp) {
                 } else {
                     type = 'jeedom fa fa-sitemap';
                 }
-                var newRow = '<tr>';
-                newRow = '<td style="padding: 8px;"><div class="form-group" align="center">';
-                newRow += '<i id="actionbutton' + i + '" title="Cliquez pour ne pas intègrer cet équipement" ndx=' + i + ' class="fa fa-check-circle-o" style="font-size: 2em;color : green;cursor:pointer;"></i>';
+                var newRow = '<tr style="vertical-align:middle;">';
+                newRow += '<td style="vertical-align:middle;"><div class="form-group" align="center">';
+                newRow += '<a id="actionbutton' + i + '" title="Cliquez pour ne pas intègrer cet équipement" ndx=' + i + ' class="add-ctrl btn btn-default fa fa-check-circle-o" style="font-size: 2.3em;color : green;cursor:pointer;padding: 4px;"></a>';
                 newRow += '</div></td>';
-                newRow += '<td style="padding: 8px;"><div class="form-group" align="center">';
-                newRow += '<i id="typebutton' + i + '" title="' + typeComment + '" ndx=' + i + ' class="' + type + '" style="font-size: 2em;color : SteelBlue;"></i>';
-                newRow += '</div></td>';
+                newRow += '<td>';
+                newRow += '<i id="typebutton' + i + '" title="' + typeComment + '" ndx=' + i + ' class="' + type + '" style="font-size: 2.2em;color : SteelBlue;padding: 6px 0px 0px 0px;"></i>';
+                newRow += '</td>';
                 newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + this.deconzList[i].id + '"></div></td>';
                 newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + this.deconzList[i].name + '"></div></td>';
                 newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="internalipaddress' + i + '" class="form-control" required id="internalipaddress' + i + '" name="internalipaddress" placeholder="Ip" value="' + this.deconzList[i].internalipaddress + '"></div></td>';
-                newRow += '<td style="padding: 8px;" class="col-sm-2"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + this.deconzList[0].internalport + '"></div></td>';
+                newRow += '<td style="padding: 8px;" class="col-sm-2"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + this.deconzList[i].internalport + '"></div></td>';
                 newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="macaddress" class="form-control" required id="macaddress" name="macaddress' + i + '" placeholder="macaddress" value="' + this.deconzList[i].macaddress + '"></div></td>';
                 newRow += '</tr>';
                 $('#deconzListTable>tbody:last').append(newRow);
@@ -102,30 +102,29 @@ function step2Process(resp) {
 function step3Process(resp) {
     console.dir("setp3", resp);
     var help = '<b><span style="text-decoration: underline;">Etape 2:</span></b><br>';
-    help += 'Une demande automatique de la clé sera effectuée,,<br>';
-    help += 'si la demande automatique echoue vous serez invité<br>';
-    help += 'à obtenir et à saisir la clé APIKEY de DeCONZ manuellement.';
+    help += 'Une demande automatique de la clé sera effectuée,';
+    help += 'si la demande automatique echoue vous serez invité';
+    help += ' à obtenir et à saisir la clé APIKEY de DeCONZ manuellement.';
     setHelp(help);
     $('.next-form').addClass('disabled');
     if (resp.state === 'ok') {
+        $('#apiKeyTable>tbody:last').empty();
         $('#div_configurationAlert').showAlert({message: '{{Clé(s) API obtenue(s)}}', level: 'success'});
         $('.progress-bar').css({'background': 'SteelBlue'});
         for (var i = 0; i < deconzList.length; i++) {
             deconzList[i].apikey = resp.result[deconzList[i].internalipaddress].apikey;
+            var newRow = '<tr>';
+            newRow += '<td style="padding: 8px;"><div class="form-group" align="center">';
+            newRow += '<a id="actionbuttonapikey' + i + '" title="Cliquez pour lancer une demande de clé manuelle" ndx=' + i + ' class="add-ctrl btn btn-default fa fa-refresh disabled" style="font-size: 2.3em;color : SteelBlue;cursor:pointer;padding: 4px;"></a>';
+            newRow += '</div></td>';
+            newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + this.deconzList[i].id + '"></div></td>';
+            newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + this.deconzList[i].name + '"></div></td>';
+            newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="internalipaddress' + i + '" class="form-control" required id="internalipaddress' + i + '" name="internalipaddress" placeholder="Ip" value="' + this.deconzList[i].internalipaddress + '"></div></td>';
+            newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="macaddress" class="form-control" required id="macaddress" name="macaddress' + i + '" placeholder="macaddress" value="' + this.deconzList[i].macaddress + '"></div></td>';
+            newRow += '<td style="padding: 8px;" class="col-sm-2"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + this.deconzList[i].apikey + '"></div></td>';
+            newRow += '</tr>';
+            $('#apiKeyTable>tbody:last').append(newRow);
         }
-        /*var newRow = '<tr>';
-        newRow = '<td style="padding: 8px;"><div class="form-group" align="center">';
-        newRow += '<i id="actionbutton' + i + '" title="Cliquez pour ne pas intègrer cet équipement" ndx=' + i + ' class="fa fa-check-circle-o" style="font-size: 2em;color : green;cursor:pointer;"></i>';
-        newRow += '</div></td>';
-        newRow += '<td style="padding: 8px;"><div class="form-group" align="center">';
-        newRow += '<i id="typebutton' + i + '" title="' + typeComment + '" ndx=' + i + ' class="' + type + '" style="font-size: 2em;color : SteelBlue;"></i>';
-        newRow += '</div></td>';
-        newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + this.deconzList[i].id + '"></div></td>';
-        newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + this.deconzList[i].name + '"></div></td>';
-        newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="internalipaddress' + i + '" class="form-control" required id="internalipaddress' + i + '" name="internalipaddress" placeholder="Ip" value="' + this.deconzList[i].internalipaddress + '"></div></td>';
-        newRow += '<td style="padding: 8px;" class="col-sm-2"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + this.deconzList[0].internalport + '"></div></td>';
-        newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="macaddress" class="form-control" required id="macaddress" name="macaddress' + i + '" placeholder="macaddress" value="' + this.deconzList[i].macaddress + '"></div></td>';
-        newRow += '</tr>';*/
     } else if (resp.state === 'nok') {
         $('#div_configurationAlert').showAlert({message: '{{Impossible d\'obtenir une clé API}} : ' + 'Erreur : ' + resp.url + ' : ' + resp.error + ' (' + resp.code + ')', level: 'danger'});
         $('.progress-bar').css({'background': 'red'});
