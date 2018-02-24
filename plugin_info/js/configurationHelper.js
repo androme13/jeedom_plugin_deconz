@@ -100,7 +100,7 @@ function step2Process(resp) {
 }
 
 function step3Process(resp) {
-    console.dir(resp);
+    console.dir("setp3",resp);
     var help = '<b><span style="text-decoration: underline;">Etape 2:</span></b><br>';
     help += 'Une demande automatique de la clé sera effectuée,,<br>';
     help += 'si la demande automatique echoue vous serez invité<br>';
@@ -108,11 +108,11 @@ function step3Process(resp) {
     setHelp(help);
     $('.next-form').prop('disabled', true);
     if (resp.state === 'ok') {
-        $('#div_configurationAlert').showAlert({message: '{{Clé API obtenue}} : ' + resp.result[0].name + ' ( {{Id}}=' + resp.result[0].id + ', {{Mac}}=' + resp.result[0].macaddress + ')', level: 'success'});
+        //$('#div_configurationAlert').showAlert({message: '{{Clé API obtenue}} : ' + resp.result[0].name + ' ( {{Id}}=' + resp.result[0].id + ', {{Mac}}=' + resp.result[0].macaddress + ')', level: 'success'});
         $('.progress-bar').css({'background': 'SteelBlue'});
-        if (resp.result.length === 1) {
+      /*  if (resp.result.length === 1) {
             $('.next-form').prop('disabled', false);
-        }
+        }*/
     } else if (resp.state === 'nok') {
         $('#div_configurationAlert').showAlert({message: '{{Impossible d\'obtenir une clé API}} : ' + 'Erreur : ' + resp.url + ' : ' + resp.error + ' (' + resp.code + ')', level: 'danger'});
         $('.progress-bar').css({'background': 'red'});

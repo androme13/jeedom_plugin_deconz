@@ -15,25 +15,24 @@
  */
 
 class deconzCall {
-    json2String(json){
+    json2String(json) {
         try
         {
-            console.dir(JSON.stringify(json));
             return JSON.stringify(json);
         } catch (e)
         {
             return 'json2obj : objet invalide';
-        } 
+        }
     }
-    
+
     string2JSON(string) {
+        string.replace(/"(\\.|[^"\\])*"/g, ''); //RFC 4627
         try
         {
             return JSON.parse(string);
-            //return JSON.parse(string.replace('\"', '"'));
         } catch (e)
         {
-            return 'string2JSON : Chaine json invalide';
+            return 'string2JSON : Chaine json invalide : ' + string;
         }
     }
 

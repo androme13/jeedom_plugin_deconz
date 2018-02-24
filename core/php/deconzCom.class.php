@@ -189,8 +189,9 @@ class deconzCom {
         $usr = "delight";
         $pwd = "delight";
         $opts[CURLOPT_HTTPHEADER] = array('Content-Type: application/json', 'Authorization: Basic ' . base64_encode(utf8_encode($usr . ':' . $pwd)));
-        $response = self::genericResponseProcess($opts);
-        return $response;
+        return self::genericResponseProcess($opts);
+        //$response = self::genericResponseProcess($opts);
+        //return $response;
     }
 
     public function getConf() {

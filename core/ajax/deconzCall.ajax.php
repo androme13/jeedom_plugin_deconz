@@ -36,8 +36,15 @@ try {
         case 'getAPIKey' :
             for ($i = 0; $i < count($params); $i++) {
                 $com->setIpPort($params[$i]->ip, $params[$i]->port);
-                $resp = $com->getAPIAccess();
+                $message = json_decode($com->getAPIAccess()->message);
+                $arr[$params[$i]->ip] = [
+                    'apikey' => $message[0]->success->username,
+                    'error' => $com->getAPIAccess()->error,
+                    'state' => $com->getAPIAccess()->state,
+                ];
             }
+            $resp->message = json_encode($arr);
+            $resp->state = 'ok';
             $error = 'GetAPIKey Error';
             break;
     }
