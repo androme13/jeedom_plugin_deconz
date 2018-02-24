@@ -18,22 +18,51 @@
 
 require_once dirname(__FILE__) . "/../../../../core/php/core.inc.php";
 
-// interactions vers le DeConz
-
+// interactions vers le contrôleur DeConz
 
 class deconzCom {
 
+    private $default_CURLOPT = [
+        CURLOPT_CONNECTTIMEOUT => 30,
+        CURLOPT_FORBID_REUSE => true,
+        CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_TIMEOUT => 30
+    ];
     private $apikey = null;
     private $ip = null;
-    private $responseHelper = array("error" => 0, "message" => "", "state" => "");
+    private $responseHelper = array('error' => 0, 'message' => '', 'state' => '');
+    private $deconzHTTPErrors = [
+        '200' => ['name' => 'OK', 'desc' => 'Request succeded'],
+        '201' => ['name' => 'Created', 'desc' => 'A new resource was created'],
+        '202' => ['name' => 'Accepted', 'desc' => 'Request will be processed but isn\'t finished yet'],
+        '304' => ['name' => 'Not Modified', 'desc' => 'Is returned if the request had the If-None-Match header and the ETag on the resource was the same.'],
+        '400' => ['name' => 'Bad request', 'desc' => 'The request was not formated as expected or missing parameters'],
+        '401' => ['name' => 'Unauthorized', 'desc' => 'Authorization failed'],
+        '403' => ['name' => 'Forbidden', 'desc' => 'The caller has no rights to access the requested URI'],
+        '404' => ['name' => 'Resource Not Found', 'desc' => 'The requested resource (light, group, ...) was not found'],
+        '503' => ['name' => 'Service Unavailable', 'desc' => 'The device is not connected to the network or too busy to handle further requests'],
+    ];
+    
+    private $deconzOBJECTErrors =[
+        '1' => ['desc' => 'unauthorized user', 'details' => 'This will be returned if the request had no valid apikey or if the apikey has not the rights to access a resource.'],
+        '2' => ['desc' => 'body contains invalid JSON', 'details' => 'This will be returned if the JSON in the body couldn\'t be parsed.'],
+        '3' => ['desc' => 'resource, <resource>, not available', 'details' => 'This will be returned if the requestet resource like a light or a group does not exist.'],
+        '4' => ['desc' => 'method, <method>, not available for resource, <resource>', 'details' => 'This will be returned if the requested method (GET, PUT, POST or DELETE) is not supported for the resource.d'],
+        '5' => ['desc' => 'missing parameters in body', 'details' => 'This will be returned if the request didn\'t contain all required parameters.'],
+        '6' => ['desc' => 'parameter, <parameter>, not available', 'details' => 'This will be returned if a parameter sent in the request is not supported.'],
+        '7' => ['desc' => 'invalid value, <value>, for parameter, <parameter>', 'details' => 'This will be returned if a parameter hasn\'t the expected format or is out of range.'],
+        '8' => ['desc' => 'parameter, <parameter>, is not modifiable', 'details' => 'This will be returned in an attempt to change a read only parameter.'],
 
+    ];
+    
     public function __construct($ip = null, $apikey = null) {
         if (isset($ip)) {
             $this->ip = $ip;
         } else {
             $this->ip = config::byKey('DeConzIP', 'DeConz');
         }
-
         if (isset($apikey)) {
             $this->apikey = $apikey;
         } else {
@@ -56,20 +85,12 @@ class deconzCom {
     }
 
     public function findDeConz() {
-        $opts = [
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
-            CURLOPT_URL => "https://dresden-light.appspot.com/discover",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_CONNECTTIMEOUT => 30
-        ];
+        $opts = $this->default_CURLOPT;
+        $opts[CURLOPT_URL] = 'https://dresden-light.appspot.com/discover';
         return self::genericResponseProcess($opts);
     }
 
     private function genericDelete($url = null, $param = null) {
-        //if ($url==null) return false;
-        //$ch = curl_init();
         $opts = [
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_FORBID_REUSE => true,
@@ -86,14 +107,11 @@ class deconzCom {
     }
 
     private function genericGet($url = null) {
-        //if ($url==null) return false;
-        //$ch = curl_init();
         $opts = [
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_FORBID_REUSE => true,
             CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
             CURLOPT_URL => $url,
-            //CURLOPT_POST		   => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_CONNECTTIMEOUT => 30
@@ -102,13 +120,11 @@ class deconzCom {
     }
 
     private function genericPost($url = null, $param = null) {
-        //if ($url==null) return false;
-        //$ch = curl_init();
         $opts = [
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_FORBID_REUSE => true,
             CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
-            CURLOPT_POSTFIELDS => $param, //"{\"devicetype\":\"jeedomDeConzPlugin\"}",
+            CURLOPT_POSTFIELDS => $param,
             CURLOPT_URL => $url,
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true,
@@ -119,8 +135,6 @@ class deconzCom {
     }
 
     private function genericPut($url = null, $param = null) {
-        //if ($url==null) return false;
-        //$ch = curl_init();
         $opts = [
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_FORBID_REUSE => true,
@@ -128,7 +142,6 @@ class deconzCom {
             CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
             CURLOPT_POSTFIELDS => $param,
             CURLOPT_URL => $url,
-            //CURLOPT_POST		   => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_CONNECTTIMEOUT => 30
@@ -143,45 +156,36 @@ class deconzCom {
         $error = curl_error($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        // $response = $responseHelper;
         if ($result === false) {
-            $response->state = "nok";
+            $response->state = 'nok';
             $response->error = $httpcode;
             $response->message = $error;
-            return $response;
         } else {
-            $response->state = "ok";
+            $response->state = 'ok';
             $response->error = $httpcode;
             if ($response->error != '200') {
-                $response->state = "nok";
+                $response->state = 'nok';
             }
             $response->message = $result;
-            if ($response->message == '') {
+            if ($response->message === '') {
                 $response->message = strval($response->error);
             }
-            return $response;
         }
+        return $response;
     }
 
     public function getAPIAccess() {
-        // méthode 1
-        $opts = [
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_FORBID_REUSE => true,
-            CURLOPT_POSTFIELDS => "{\"devicetype\":\"jeedom_DeConz_Plugin\"}",
-            CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
-            CURLOPT_URL => "http://" . $this->ip . "/api",
-            CURLOPT_POST => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_CONNECTTIMEOUT => 30
-        ];
+// méthode 1
+        $opts = $this->default_CURLOPT;
+        $opts[CURLOPT_POST] = true;
+        $opts[CURLOPT_POSTFIELDS] = '{"devicetype":"jeedom_DeConz_Plugin"}';
+        $opts[CURLOPT_URL] = 'http://' . $this->ip . '/api';
         $response = self::genericResponseProcess($opts);
-        if ($response->state == "ok") {
+        if ($response->state === 'ok') {
             return $response;
         }
-        // si la premère méthode échoue on passe à la seconde
-        //user et pwd par défaut
+// si la premère méthode échoue on passe à la seconde
+//user et pwd par défaut
         $usr = "delight";
         $pwd = "delight";
         $opts[CURLOPT_HTTPHEADER] = array('Content-Type: application/json', 'Authorization: Basic ' . base64_encode(utf8_encode($usr . ':' . $pwd)));
@@ -258,7 +262,7 @@ class deconzCom {
     }
 
     public function sendCommand($type = null, $id = null, $command = null) {
-        //error_log("sendLightCommand(".$id.":".$command.")",3,"/tmp/prob.txt");
+//error_log("sendLightCommand(".$id.":".$command.")",3,"/tmp/prob.txt");
         $url = 'http://' . $this->ip . '/api/' . $this->apikey . '/' . $type . '/' . $id;
         if ($type == "groups") {
             $url = $url . "/action";
@@ -278,7 +282,6 @@ class deconzCom {
             CURLOPT_CUSTOMREQUEST => "PUT",
             CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
             CURLOPT_URL => $url,
-            //CURLOPT_POST		   => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_CONNECTTIMEOUT => 30
@@ -289,7 +292,16 @@ class deconzCom {
         if ($result === false) {
             return false;
         } else {
-            return $result; //substr($result,1,-1);
+            return $result;
+        }
+    }
+    
+    public function setIpPort($ip = null, $port = null){
+        if ($ip!=null){
+            $this->ip=$ip;            
+        }
+        if ($port!=null){
+            $this->port=$port;            
         }
     }
 

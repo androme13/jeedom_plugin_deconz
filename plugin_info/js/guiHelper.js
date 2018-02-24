@@ -16,10 +16,12 @@
  */
 
 $(document).ready(function () {
-    //$('.progress-bar').css({ 'background': 'SteelBlue' });
     var form_count = 1, previous_form, next_form, total_forms;
     total_forms = 3;
     $(".progress-bar").hide();
+    $(".add-ctrl").click(function (handler) {
+       addCtrl(handler);
+    });
     $(".next-form").click(function () {
         previous_form = $(this).parent();
         next_form = $(this).parent().next();
@@ -55,7 +57,6 @@ $(document).ready(function () {
         percent = percent.toFixed();
         $(".progress-bar")
                 .css("width", percent + "%")
-                //.html(percent+"%");
                 .html("Etape : " + (form_count - 1) + "/3");
     }
     // Handle form submit and validation
@@ -95,14 +96,15 @@ function initialStepAction(form_count) {
         {
             $('#div_configurationAlert').hideAlert();
             $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, recherche de DeCONZ en cours ...', level: 'info'});           
-            deconzcall.deconzSearch(step2Process);
+            deconzcall.call('search',null,step2Process);
             break;
         }
         case 3 :
         {
             $('#div_configurationAlert').hideAlert();
-            $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, tentative d\'obtention de la clé API de DeCONZ en cours ...', level: 'info'});
-            deconzcall.deconzGetAPIKey(step3Process);
+            $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, tentative d\'obtention de la clé API de DeCONZ en cours ...', level: 'info'});            
+            var srv=[{'ip':'10.0.0.19','port':'80'}];
+            deconzcall.call('getAPIKey',srv,step3Process);
             break;
         }
         case 4 :

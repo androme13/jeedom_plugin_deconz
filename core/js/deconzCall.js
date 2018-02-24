@@ -15,50 +15,44 @@
  */
 
 class deconzCall {
-    string2JSON(string) {
-
+    json2String(json){
         try
         {
-            return JSON.parse(string.replace('\"', '"'));
+            console.dir(JSON.stringify(json));
+            return JSON.stringify(json);
         } catch (e)
         {
-            return 'Chaine json invalide';
+            return 'json2obj : objet invalide';
+        } 
+    }
+    
+    string2JSON(string) {
+        try
+        {
+            return JSON.parse(string);
+            //return JSON.parse(string.replace('\"', '"'));
+        } catch (e)
+        {
+            return 'string2JSON : Chaine json invalide';
         }
     }
-    deconzSearch(callback) {
+
+    call(action, params, callback) {
         var me = this;
         var url = "plugins/deconz/core/ajax/deconzCall.ajax.php";
         $.ajax({
             type: "POST",
             url: url,
             data: {
-                action: "deconzSearch"
+                action: action,
+                params: this.json2String(params)
             },
             dataType: 'json',
             error: function (resp, status, error) {
-                me.deconzGenericAjaxError(url, resp, status, error, callback)
+                me.deconzGenericAjaxError(url, resp, status, error, callback);
             },
             success: function (resp, status) {
                 me.deconzGenericAjaxSuccess(resp, callback);
-            }
-        });
-    }
-
-    deconzGetAPIKey(callback) {
-        var me = this;
-        var url = "plugins/deconz/core/ajax/deconzCall.ajax.php";
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: {
-                action: "getAPIKey",
-            },
-            dataType: 'json',
-            error: function (resp, status, error) {
-                me.deconzGenericAjaxError(url, resp, status, error, callback)
-            },
-            success: function (resp) {
-                me.deconzGenericAjaxSuccess(resp, callback, url);
             }
         });
     }
