@@ -51,7 +51,7 @@ function step2Process(resp) {
                 } else {
                     type = 'jeedom fa fa-sitemap';
                 }
-                var newRow = '<tr style="vertical-align:middle;">';
+                var newRow = '<tr>';
                 newRow += '<td style="vertical-align:middle;"><div class="form-group" align="center">';
                 newRow += '<a id="actionbutton' + i + '" title="Cliquez pour ne pas intègrer cet équipement" ndx=' + i + ' class="add-ctrl btn btn-default fa fa-check-circle-o" style="font-size: 2.3em;color : green;cursor:pointer;padding: 4px;"></a>';
                 newRow += '</div></td>';
@@ -117,6 +117,9 @@ function step3Process(resp) {
             newRow += '<td style="padding: 8px;"><div class="form-group" align="center">';
             newRow += '<a id="actionbuttonapikey' + i + '" title="Cliquez pour lancer une demande de clé manuelle" ndx=' + i + ' class="add-ctrl btn btn-default fa fa-refresh disabled" style="font-size: 2.3em;color : SteelBlue;cursor:pointer;padding: 4px;"></a>';
             newRow += '</div></td>';
+            newRow += '<td style="padding: 8px;"><div class="form-group" align="center">';
+            newRow += '<i id="apikeyStatus' + i + '" title="Contrôleur prêt à être intégré" ndx=' + i + ' class="add-ctrl fa fa-exclamation-circle" style="font-size: 2.3em;color : ForestGreen;cursor:pointer;padding: 4px;"></i>';
+            newRow += '</div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + this.deconzList[i].id + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + this.deconzList[i].name + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="internalipaddress' + i + '" class="form-control" required id="internalipaddress' + i + '" name="internalipaddress" placeholder="Ip" value="' + this.deconzList[i].internalipaddress + '"></div></td>';
@@ -149,17 +152,48 @@ function actionClick(handler) {
     }
 }
 
-
+function valid() {
+    var a = true;
+    var b = true;
+    var ipform = $("#ipform");
+    var portform = $("#portform");
+    console.dir("valid",ipform[0][0].validity.valid);
+    if (ipform[0][0].validity.valid && portform[0][0].validity.valid) {
+        $('.valid-ctrl').removeClass('disabled');
+    }
+}
 function addCtrl(handler) {
     $(".next-form").addClass("disabled");
     var i = 0;
     var newRow = '<tr><td></td><td></td><td></td><td></td>';
-    newRow += '<td style="padding: 8px;"><div class="form-group"><input type="ipman' + i + '" class="form-control" required id="ipman' + i + '" name="ipman" placeholder="Ip" value="" ></div></td>';
-    newRow += '<td style="padding: 8px;"><div class="form-group"><input type="portman' + i + '" class="form-control" required id="portman' + i + '" name="portman" placeholder="Port" value=""></div></td>';
-    newRow += '<td valign="bottom"><a class="validate-ctrl btn btn-success fa fa-plus"> Valider</a></td>';
+    newRow += '<td style="padding: 8px;"><div class="form-group"><form id="ipform" class="inputform" action="javascript:valid()"><input title="Adresse IP du contrôleur" type="ipman" class="form-control" required id="ipman" name="ipman" placeholder="xxx.xxx.xxx.xxx" value="" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$"></form></div></td>';
+    newRow += '<td style="padding: 8px;"><div class="form-group"><form id="portform" class="inputform" action="javascript:valid()"><input title="Port réseau du contrôleur"  type="portman" class="form-control" required id="portman" name="portman" placeholder="xxxxx" value="" pattern="^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"></form></div></td>';
+    newRow += '<td style="padding: 8px;"><a class="valid-ctrl btn btn-success fa fa-plus disabled"> Valider</a><a class="cancel-ctrl btn btn-danger fa fa-minus"> Annuler</a></td>';
     newRow += '</tr>';
     $("#deconzListTable>tbody:last").append(newRow);
+    $("#ipman").focus();
+    $('<input type="submit" value="Submit">').hide().appendTo('#ipform').click().remove();
+    prepareInputValidate("#ipman");
+    prepareInputValidate("#portman");
     $(".add-ctrl").addClass("disabled");
+}
+
+function prepareInputValidate(input) {
+    var field = $(input);
+    var form = field.closest("form");
+    //  var element = $("#portman")[0];
+    //  element.setCustomValidity('Veuillez un port réseau valide (0-65535)');
+    field.blur(function (event) {
+    });
+    field.focus(function (event) {
+        virtualsubmit();
+    });
+    field.keypress(function () {
+        virtualsubmit();
+    });
+    virtualsubmit = function () {
+        $('<input type="submit" value="Submit">').hide().appendTo(form).click().remove();
+    };
 }
 
 function setHelp(help) {

@@ -70,6 +70,7 @@ if (!isConnect()) {
                         <table class="table" id="apiKeyTable">
                             <tr>
                                 <th>Action</th>
+                                <th>Status</th>
                                 <th>Id</th>
                                 <th>Nom</th>
                                 <th>Ip</th>
@@ -115,6 +116,13 @@ if (!isConnect()) {
         pointer-events: none;
         cursor: default;
         opacity: 0.6;
+    }
+    input:invalid {
+        box-shadow: 0 0 5px 1px red;
+    }
+    
+    input:valid {
+        box-shadow: 0 0 5px 1px greenyellow;
     }
 </style>
 
