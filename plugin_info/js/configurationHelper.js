@@ -1,4 +1,3 @@
-
 /* This file is part of Plugin DeCONZ for jeedom.
  *
  * Plugin DeCONZ for jeedom is free software: you can redistribute it and/or modify
@@ -14,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Plugin DeCONZ for jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
+"use strict";
 
 var deconzList = new Object();
 
@@ -24,24 +24,24 @@ function step1Process() {
 }
 
 function step2Process(resp) {
-    console.dir(resp);
+    var i = 0;
     $('.add_manual_ctrl_but').removeClass('disabled');
     var help = '<b><span style="text-decoration: underline;">Etape 1:</span></b><br>';
     help += 'Une recherche automatique de DeCONZ sera effectuée.';
     help += ' Vous pouvez toutefois ajouter un contrôleur manuellement en cliquant';
     help += ' sur le bouton "Ajout manuel".';
     setHelp(help);
-    this.deconzList = resp.result;
+    deconzList = resp.result;
     $('.next-form').addClass('disabled');
     if (resp.state === 'ok') {
-        $('#div_configurationAlert').showAlert({message: '{{DeCONZ trouvé}} : ' + this.deconzList.length + ' DeCONZ trouvé(s)', level: 'success'});
+        $('#div_configurationAlert').showAlert({message: '{{DeCONZ trouvé}} : ' + deconzList.length + ' DeCONZ trouvé(s)', level: 'success'});
         $('.progress-bar').css({'background': 'SteelBlue'});
-        if (this.deconzList.length > 0) {
+        if (deconzList.length > 0) {
             $('#deconzListTable>tbody:last').empty();
-            for (var i = 0; i < this.deconzList.length; i++) {
-                this.deconzList[0].action = true;
+            for (i = 0; i < deconzList.length; i++) {
+                deconzList[0].action = true;
                 var typeComment, type;
-                if (location.host === this.deconzList[i].internalipaddress) {
+                if (location.host === deconzList[i].internalipaddress) {
                     typeComment = 'Interne';
                 } else {
                     typeComment = 'Externe';
@@ -58,11 +58,11 @@ function step2Process(resp) {
                 newRow += '<td>';
                 newRow += '<i id="typebutton' + i + '" title="' + typeComment + '" ndx=' + i + ' class="' + type + '" style="font-size: 2.2em;color : SteelBlue;padding: 6px 0px 0px 0px;"></i>';
                 newRow += '</td>';
-                newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + this.deconzList[i].id + '"></div></td>';
-                newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + this.deconzList[i].name + '"></div></td>';
-                newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="internalipaddress' + i + '" class="form-control" required id="internalipaddress' + i + '" name="internalipaddress" placeholder="Ip" value="' + this.deconzList[i].internalipaddress + '"></div></td>';
-                newRow += '<td style="padding: 8px;" class="col-sm-2"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + this.deconzList[i].internalport + '"></div></td>';
-                newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="macaddress" class="form-control" required id="macaddress" name="macaddress' + i + '" placeholder="macaddress" value="' + this.deconzList[i].macaddress + '"></div></td>';
+                newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + deconzList[i].id + '"></div></td>';
+                newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + deconzList[i].name + '"></div></td>';
+                newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="internalipaddress' + i + '" class="form-control" required id="internalipaddress' + i + '" name="internalipaddress" placeholder="Ip" value="' + deconzList[i].internalipaddress + '"></div></td>';
+                newRow += '<td style="padding: 8px;" class="col-sm-2"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + deconzList[i].internalport + '"></div></td>';
+                newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="macaddress" class="form-control" required id="macaddress" name="macaddress' + i + '" placeholder="macaddress" value="' + deconzList[i].macaddress + '"></div></td>';
                 newRow += '</tr>';
                 $('#deconzListTable>tbody:last').append(newRow);
                 $('#actionbutton' + i).click(function (handler) {
@@ -92,8 +92,9 @@ function step2Process(resp) {
 }
 
 function step2Valid() {
+    var i = 0;
     var letNext = false;
-    for (var i = 0; i < deconzList.length; i++) {
+    for (i = 0; i < deconzList.length; i++) {
         if (deconzList[i].action) {
             letNext = true;
         }
@@ -110,6 +111,7 @@ function step2Valid() {
 
 function step3Process(resp) {
     console.dir("setp3", resp);
+    var i = 0
     var help = '<b><span style="text-decoration: underline;">Etape 2:</span></b><br>';
     help += 'Une demande automatique de la clé sera effectuée,';
     help += 'si la demande automatique echoue vous serez invité';
@@ -120,7 +122,7 @@ function step3Process(resp) {
         $('#apiKeyTable>tbody:last').empty();
         $('#div_configurationAlert').showAlert({message: '{{Clé(s) API obtenue(s)}}', level: 'success'});
         $('.progress-bar').css({'background': 'SteelBlue'});
-        for (var i = 0; i < deconzList.length; i++) {
+        for (i = 0; i < deconzList.length; i++) {
             deconzList[i].apikey = resp.result[deconzList[i].internalipaddress].apikey;
             var newRow = '<tr>';
             newRow += '<td style="padding: 8px;"><div class="form-group" align="center">';
@@ -192,11 +194,13 @@ function prepareInputValidate(input) {
     field.keypress(function () {
         virtualsubmit(form);
     });
-    virtualsubmit = function (form) {
-        $('<input type="submit" value="Submit">').hide().appendTo(form).click().remove();
-    };
 }
 
 function setHelp(help) {
     $('#stepHelp').html(help);
 }
+
+function virtualsubmit(form) {
+    $('<input type="submit" value="Submit">').hide().appendTo(form).click().remove();
+}
+;

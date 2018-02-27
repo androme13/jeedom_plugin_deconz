@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Plugin DeCONZ for jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
+"use strict";
 
 class deconzCall {
     json2String(json) {

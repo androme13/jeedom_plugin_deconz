@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Plugin DeCONZ for jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
+"use strict";
 
 $(document).ready(function () {
     var form_count = 1, previous_form, next_form, total_forms;
