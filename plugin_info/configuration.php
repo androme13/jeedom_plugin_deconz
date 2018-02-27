@@ -31,7 +31,7 @@ if (!isConnect()) {
     <div class="alert alert-success hide"></div>
     <table class="table">
         <td class="col-sm-9">
-            <form id="register_form" novalidate action="form_action.php" method="post">
+            <form id="ctrl_form" action="javascript:validCheck()">
                 <fieldset>
                     <h2>Configuration: 3 étapes pour configurer le plugin</h2>
                     <div class="form-group">
@@ -60,9 +60,19 @@ if (!isConnect()) {
                         <tbody>
                         </tbody>
                     </table>
-                    <div align="right"><a class="add-ctrl btn btn-default fa fa-check-circle"> Ajout manuel</a></div>
+                    <table padding="0px 0px 0px 0px" style="width:100%;">
+                        <tr valign="top">
+                            <td>
+                                <div align="left" id="cancelreason"></div>
+                            </td>
+                            <td>
+                                <div align="right"><a class="add_manual_ctrl_but btn btn-default fa fa-plus-circle" style="color:green;"><font color="white">  Ajout manuel</font></a></div>
+                            </td>
+                        </tr>
+                    </table>
                     <a name="previous" id="" class="previous-form btn btn-default fa fa-step-backward"> Précédent</a>
-                    <a name="next" id="next-form" class="next-form btn btn-info fa fa-step-forward"> Suivant</a>
+                    <a name="next" id="next-form" class="next-form btn btn-default fa fa-step-forward"> Suivant</a>
+
                 </fieldset>
                 <fieldset>
                     <h2> Etape 2: Obtenir une clé d'accès</h2>
@@ -75,14 +85,14 @@ if (!isConnect()) {
                                 <th>Nom</th>
                                 <th>Ip</th>
                                 <th>Mac</th>
-                                <th>Api Key</th>                           
+                                <th>Api Key</th>
                             </tr>
                             <tbody>
                             </tbody>
                         </table>
                     </div>
                     <a name="previous" class="previous-form btn btn-default fa fa-step-backward"> Précédent</a>
-                    <a name="next" class="next-form btn btn-info fa fa-step-forward"> Suivant</a>
+                    <a name="next" class="next-form btn btn-default fa fa-step-forward"> Suivant</a>
                 </fieldset>
                 <fieldset>
                     <h2>Etape 3: Validation des informations</h2>
@@ -97,7 +107,7 @@ if (!isConnect()) {
             </form>
         </td>
         <td>
-            <div id="stepHelp">             
+            <div id="stepHelp">
             </div>
         </td>
     </table>
@@ -109,19 +119,19 @@ if (!isConnect()) {
 <?php include_file('plugin_info', 'configurationHelper', 'js', 'deconz'); ?>
 
 <style type="text/css">
-    #register_form fieldset:not(:first-of-type) {
+    #ctrl_form fieldset:not(:first-of-type) {
         display: none;
     }
     .disabled {
         pointer-events: none;
-        cursor: default;
+        cursor: not-allowed;
         opacity: 0.6;
     }
-    input:invalid {
+    .buttoninput:invalid {
         box-shadow: 0 0 5px 1px red;
     }
-    
-    input:valid {
+
+    .buttoninput:valid {
         box-shadow: 0 0 5px 1px greenyellow;
     }
 </style>

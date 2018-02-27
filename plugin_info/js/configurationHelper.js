@@ -25,7 +25,7 @@ function step1Process() {
 
 function step2Process(resp) {
     console.dir(resp);
-    $('.add-ctrl').removeClass('disabled');
+    $('.add_manual_ctrl_but').removeClass('disabled');
     var help = '<b><span style="text-decoration: underline;">Etape 1:</span></b><br>';
     help += 'Une recherche automatique de DeCONZ sera effectuée.';
     help += ' Vous pouvez toutefois ajouter un contrôleur manuellement en cliquant';
@@ -53,7 +53,7 @@ function step2Process(resp) {
                 }
                 var newRow = '<tr>';
                 newRow += '<td style="vertical-align:middle;"><div class="form-group" align="center">';
-                newRow += '<a id="actionbutton' + i + '" title="Cliquez pour ne pas intègrer cet équipement" ndx=' + i + ' class="add-ctrl btn btn-default fa fa-check-circle-o" style="font-size: 2.3em;color : green;cursor:pointer;padding: 4px;"></a>';
+                newRow += '<a id="actionbutton' + i + '" title="Cliquez pour ne pas intègrer cet équipement" ndx=' + i + ' class="add_manual_ctrl_but btn btn-default fa fa-check-circle-o" style="font-size: 2.3em;color : green;cursor:pointer;padding: 4px;"></a>';
                 newRow += '</div></td>';
                 newRow += '<td>';
                 newRow += '<i id="typebutton' + i + '" title="' + typeComment + '" ndx=' + i + ' class="' + type + '" style="font-size: 2.2em;color : SteelBlue;padding: 6px 0px 0px 0px;"></i>';
@@ -69,26 +69,18 @@ function step2Process(resp) {
                     var nodeValue = handler.target.attributes['ndx'].nodeValue;
                     if (deconzList[nodeValue].action) {
                         deconzList[nodeValue].action = false;
-                        $('#' + handler.target.id).attr('class', 'fa fa-ban');
+                        $('#' + handler.target.id).removeClass('fa-check-circle-o');
+                        $('#' + handler.target.id).addClass('fa-ban');
                         $('#' + handler.target.id).css({'color': 'red'});
                         $('#' + handler.target.id).attr('title', 'Cliquez pour intègrer cet équipement');
                     } else {
                         deconzList[nodeValue].action = true;
-                        $('#' + handler.target.id).attr('class', 'fa fa-check-circle-o');
+                        $('#' + handler.target.id).removeClass('fa-ban');
+                        $('#' + handler.target.id).addClass('fa-check-circle-o');
                         $('#' + handler.target.id).css({'color': 'green'});
                         $('#' + handler.target.id).attr('title', 'Cliquez pour ne pas intègrer cet équipement');
                     }
-                    var letNext = false;
-                    for (var i = 0; i < deconzList.length; i++) {
-                        if (deconzList[i].action) {
-                            letNext = true;
-                        }
-                    }
-                    if (letNext) {
-                        $('.next-form').removeClass('disabled');
-                    } else {
-                        $('.next-form').addClass('disabled');
-                    }
+                    step2Valid();
                 });
                 $('.next-form').removeClass('disabled');
             }
@@ -97,6 +89,23 @@ function step2Process(resp) {
         $('#div_configurationAlert').showAlert({message: '{{DeCONZ introuvable}} : ' + 'Erreur : ' + resp.url + ' ' + resp.error + ' (' + resp.code + ')', level: 'danger'});
         $('.progress-bar').css({'background': 'red'});
     }
+}
+
+function step2Valid() {
+    var letNext = false;
+    for (var i = 0; i < deconzList.length; i++) {
+        if (deconzList[i].action) {
+            letNext = true;
+        }
+    }
+    if (letNext) {
+        $('.next-form').removeClass('disabled');
+        $('#cancelreason').empty();
+    } else {
+        $('#cancelreason').html('<i class="fa fa-exclamation-triangle" style="color:red;"></i><font color="white"> Aucun contrôleur intégrable.</font>');
+        $('.next-form').addClass('disabled');
+    }
+    $(".add_manual_ctrl_but").removeClass("disabled");
 }
 
 function step3Process(resp) {
@@ -115,10 +124,10 @@ function step3Process(resp) {
             deconzList[i].apikey = resp.result[deconzList[i].internalipaddress].apikey;
             var newRow = '<tr>';
             newRow += '<td style="padding: 8px;"><div class="form-group" align="center">';
-            newRow += '<a id="actionbuttonapikey' + i + '" title="Cliquez pour lancer une demande de clé manuelle" ndx=' + i + ' class="add-ctrl btn btn-default fa fa-refresh disabled" style="font-size: 2.3em;color : SteelBlue;cursor:pointer;padding: 4px;"></a>';
+            newRow += '<a id="actionbuttonapikey' + i + '" title="Cliquez pour lancer une demande de clé manuelle" ndx=' + i + ' class="add_manual_ctrl_but btn btn-default fa fa-refresh disabled" style="font-size: 2.3em;color : SteelBlue;cursor:pointer;padding: 4px;"></a>';
             newRow += '</div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group" align="center">';
-            newRow += '<i id="apikeyStatus' + i + '" title="Contrôleur prêt à être intégré" ndx=' + i + ' class="add-ctrl fa fa-exclamation-circle" style="font-size: 2.3em;color : ForestGreen;cursor:pointer;padding: 4px;"></i>';
+            newRow += '<i id="apikeyStatus' + i + '" title="Contrôleur prêt à être intégré" ndx=' + i + ' class="add_manual_ctrl_but fa fa-exclamation-circle" style="font-size: 2.3em;color : ForestGreen;cursor:pointer;padding: 4px;"></i>';
             newRow += '</div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + this.deconzList[i].id + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + this.deconzList[i].name + '"></div></td>';
@@ -141,57 +150,49 @@ function step4Process() {
     $(".next-form").prop("disabled", false);
 }
 
-function actionClick(handler) {
-    var nodeValue = handler.target.attributes['ndx'].nodeValue;
-    if (resp.result[nodeValue].action) {
-        $('#' + handler.target.id).attr('class', 'fa fa-times');
-        $('#' + handler.target.id).css({'color': 'red'});
+function validCheck() {
+    if ($('#ctrl_form')[0][0].validity.valid) {
+        $('.valid_manual_ctrl_but').removeClass('disabled');
     } else {
-        $('#' + handler.target.id).attr('class', 'fa fa-check');
-        $('#' + handler.target.id).css({'color': 'green'});
-    }
-}
-
-function valid() {
-    var a = true;
-    var b = true;
-    var ipform = $("#ipform");
-    var portform = $("#portform");
-    console.dir("valid",ipform[0][0].validity.valid);
-    if (ipform[0][0].validity.valid && portform[0][0].validity.valid) {
-        $('.valid-ctrl').removeClass('disabled');
+        $('.valid_manual_ctrl_but').addClass('disabled');
     }
 }
 function addCtrl(handler) {
-    $(".next-form").addClass("disabled");
-    var i = 0;
+    $(".next-form").addClass('disabled');
+    $('.valid_manual_ctrl_but').addClass('disabled');
+    $('.add_manual_ctrl_but').addClass('disabled');
     var newRow = '<tr><td></td><td></td><td></td><td></td>';
-    newRow += '<td style="padding: 8px;"><div class="form-group"><form id="ipform" class="inputform" action="javascript:valid()"><input title="Adresse IP du contrôleur" type="ipman" class="form-control" required id="ipman" name="ipman" placeholder="xxx.xxx.xxx.xxx" value="" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$"></form></div></td>';
-    newRow += '<td style="padding: 8px;"><div class="form-group"><form id="portform" class="inputform" action="javascript:valid()"><input title="Port réseau du contrôleur"  type="portman" class="form-control" required id="portman" name="portman" placeholder="xxxxx" value="" pattern="^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"></form></div></td>';
-    newRow += '<td style="padding: 8px;"><a class="valid-ctrl btn btn-success fa fa-plus disabled"> Valider</a><a class="cancel-ctrl btn btn-danger fa fa-minus"> Annuler</a></td>';
+    newRow += '<td style="padding: 8px;"><div class="form-group"><input title="Adresse IP du contrôleur" type="ipman" class="form-control buttoninput" required id="ipman" name="ipman" placeholder="xxx.xxx.xxx.xxx" value="" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$"></div></td>';
+    newRow += '<td style="padding: 8px;"><div class="form-group"><input title="Port réseau du contrôleur"  type="portman" class="form-control buttoninput" required id="portman" name="portman" placeholder="xxxxx" value="" pattern="^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"></div></td>';
+    newRow += '<td style="padding: 8px;"><a class="valid_manual_ctrl_but btn btn-default fa fa-plus disabled" style="color:green"><font color="white"> Ajouter</font></a><a id="cancel_manual_ctrl_but" class="cancel-ctrl btn btn-default fa fa-minus" style="color:red"><font color="white"> Supprimer</font></a></td>';
     newRow += '</tr>';
     $("#deconzListTable>tbody:last").append(newRow);
     $("#ipman").focus();
-    $('<input type="submit" value="Submit">').hide().appendTo('#ipform').click().remove();
+    $('<input type="submit" value="Submit">').hide().appendTo('#ctrl_form').click().remove();
     prepareInputValidate("#ipman");
     prepareInputValidate("#portman");
-    $(".add-ctrl").addClass("disabled");
+    $("#cancel_manual_ctrl_but").click(function (context) {
+        console.log("cancel");
+        $('#ctrl_form').blur();
+        $('#deconzListTable tr:last').remove();
+        $('.add_manual_ctrl_but').removeClass('disabled');
+        step2Valid();
+    });
 }
 
 function prepareInputValidate(input) {
     var field = $(input);
     var form = field.closest("form");
-    //  var element = $("#portman")[0];
-    //  element.setCustomValidity('Veuillez un port réseau valide (0-65535)');
-    field.blur(function (event) {
+    field.blur(function () {
+        virtualsubmit(form);
     });
     field.focus(function (event) {
-        virtualsubmit();
+        virtualsubmit(form);
     });
     field.keypress(function () {
-        virtualsubmit();
+        virtualsubmit(form);
     });
-    virtualsubmit = function () {
+    virtualsubmit = function (form) {
         $('<input type="submit" value="Submit">').hide().appendTo(form).click().remove();
     };
 }

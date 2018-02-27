@@ -19,7 +19,7 @@ $(document).ready(function () {
     var form_count = 1, previous_form, next_form, total_forms;
     total_forms = 3;
     $(".progress-bar").hide();
-    $(".add-ctrl").click(function (handler) {
+    $(".add_manual_ctrl_but").click(function (handler) {
        addCtrl(handler);
     });
     $(".next-form").click(function () {
@@ -59,8 +59,7 @@ $(document).ready(function () {
                 .css("width", percent + "%")
                 .html("Etape : " + (form_count - 1) + "/3");
     }
-    // Handle form submit and validation
-    $("#register_form").submit(function (event) {
+    $("#ipform").submit(function (event) {
         var error_message = '';
         if (!$("#email").val()) {
             error_message += "Please Fill Email Address";
