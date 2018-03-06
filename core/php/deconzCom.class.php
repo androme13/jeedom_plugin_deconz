@@ -24,10 +24,13 @@ class deconzCom {
 
     private $default_CURLOPT = [
         CURLOPT_CONNECTTIMEOUT => 30,
+        CURLOPT_PORT => 80,
         CURLOPT_FORBID_REUSE => true,
         CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+        CURLOPT_FRESH_CONNECT => true,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => false,
+        //CURLOPT_SSLVERSION => 3,
         CURLOPT_TIMEOUT => 30
     ];
     private $apikey = null;
@@ -44,8 +47,7 @@ class deconzCom {
         '404' => ['name' => 'Resource Not Found', 'desc' => 'The requested resource (light, group, ...) was not found'],
         '503' => ['name' => 'Service Unavailable', 'desc' => 'The device is not connected to the network or too busy to handle further requests'],
     ];
-    
-    private $deconzOBJECTErrors =[
+    private $deconzOBJECTErrors = [
         '1' => ['desc' => 'unauthorized user', 'details' => 'This will be returned if the request had no valid apikey or if the apikey has not the rights to access a resource.'],
         '2' => ['desc' => 'body contains invalid JSON', 'details' => 'This will be returned if the JSON in the body couldn\'t be parsed.'],
         '3' => ['desc' => 'resource, <resource>, not available', 'details' => 'This will be returned if the requestet resource like a light or a group does not exist.'],
@@ -54,9 +56,8 @@ class deconzCom {
         '6' => ['desc' => 'parameter, <parameter>, not available', 'details' => 'This will be returned if a parameter sent in the request is not supported.'],
         '7' => ['desc' => 'invalid value, <value>, for parameter, <parameter>', 'details' => 'This will be returned if a parameter hasn\'t the expected format or is out of range.'],
         '8' => ['desc' => 'parameter, <parameter>, is not modifiable', 'details' => 'This will be returned in an attempt to change a read only parameter.'],
-
     ];
-    
+
     public function __construct($ip = null, $apikey = null) {
         if (isset($ip)) {
             $this->ip = $ip;
@@ -68,6 +69,13 @@ class deconzCom {
         } else {
             $this->apikey = config::byKey('DeConzAPIKEY', 'DeConz');
         }
+    }
+
+    public function confirmIP() {       
+        $opts = $this->default_CURLOPT;
+        //$opts[CURLOPT_URL] = 'http://' . $this->ip . '/api/config';
+        $opts[CURLOPT_URL] = 'http://10.0.0.19:80/api/config';
+        return self::genericResponseProcess($opts);
     }
 
     public function deleteDeConzUser($user = '') {
@@ -86,7 +94,7 @@ class deconzCom {
 
     public function findDeConz() {
         $opts = $this->default_CURLOPT;
-        $opts[CURLOPT_URL] = 'https://dresden-light.appspot.com/discover';
+        $opts[CURLOPT_URL] = 'http://dresden-light.appspot.com/discover';
         return self::genericResponseProcess($opts);
     }
 
@@ -296,13 +304,13 @@ class deconzCom {
             return $result;
         }
     }
-    
-    public function setIpPort($ip = null, $port = null){
-        if ($ip!=null){
-            $this->ip=$ip;            
+
+    public function setIpPort($ip = null, $port = null) {
+        if ($ip != null) {
+            $this->ip = $ip;
         }
-        if ($port!=null){
-            $this->port=$port;            
+        if ($port != null) {
+            $this->port = $port;
         }
     }
 

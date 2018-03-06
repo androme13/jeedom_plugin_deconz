@@ -29,6 +29,10 @@ try {
     $error = 'Aucune méthode correspondante à : ' . $action;
     $com = new deconzCom();
     switch ($action) {
+        case 'confirmIP' :
+            $resp = $com->confirmIP();
+            $error = 'confirmIP Error';
+            break;
         case 'search' :
             $resp = $com->findDeCONZ();
             $error = 'Search Error';
