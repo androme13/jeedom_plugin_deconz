@@ -15,7 +15,6 @@
  */
 "use strict";
 
-//var deconzList = new Array();
 var deconzList = new Object();
 
 function step1Process() {
@@ -25,19 +24,33 @@ function step1Process() {
 }
 
 function step2Process(resp) {
+    var i;
+    deconzList = new Object();
     $("#add_manual_ctrl_but").removeClass("disabled");
     var help = '<b><span style="text-decoration: underline;">Etape 1:</span></b><br>';
     help += "Une recherche automatique de DeCONZ sera effectuée.";
     help += " Vous pouvez toutefois ajouter un contrôleur manuellement en cliquant";
     help += ' sur le bouton "Ajout manuel".';
     setHelp(help);
-
     $(".next-form").addClass("disabled");
+    /* $('#ctrl_form').on('submit', function(e){
+         step2FormCheckValid;
+        //e.preventDefault();
+        //var len = $('#username').val().length;
+       // if (len < 6 && len > 1) {
+        //    this.submit();
+        //}
+    });*/
     if (resp.state === "ok") {
-        $("#div_configurationAlert").showAlert({message: '{{DeCONZ trouvé}} : ' + deconzList.length + ' DeCONZ trouvé(s)', level: 'success'});
-        $(".progress-bar").css({"background": "SteelBlue"});
+        // on change le nom de certaines propriétés afin d'unifier
+        for (i = 0; i < resp.result.length; i++) {
+            resp.result[i].mac = resp.result[i]['macaddress'];
+            delete resp.result[i].macaddress;
+        }
         deconzList = resp.result;
         step2TableGen();
+        $("#div_configurationAlert").showAlert({message: '{{DeCONZ trouvé}} : ' + deconzList.length + ' DeCONZ trouvé(s)', level: 'success'});
+        $(".progress-bar").css({"background": "SteelBlue"});
     } else {
         console.dir(resp);
         if (resp.url) {
@@ -50,8 +63,7 @@ function step2Process(resp) {
 }
 
 function step2TableGen() {
-    // deconzList = resp.result;
-    var i = 0;
+    var i;
     if (deconzList.length > 0) {
         $("#deconzListTable>tbody:last").empty();
         for (i = 0; i < deconzList.length; i++) {
@@ -78,7 +90,7 @@ function step2TableGen() {
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + deconzList[i].name + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="internalipaddress' + i + '" class="form-control" required id="internalipaddress' + i + '" name="internalipaddress" placeholder="Ip" value="' + deconzList[i].internalipaddress + '"></div></td>';
             newRow += '<td style="padding: 8px;" class="col-sm-2"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + deconzList[i].internalport + '"></div></td>';
-            newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="macaddress" class="form-control" required id="macaddress" name="macaddress' + i + '" placeholder="macaddress" value="' + deconzList[i].macaddress + '"></div></td>';
+            newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="macaddress" class="form-control" required id="macaddress" name="macaddress' + i + '" placeholder="macaddress" value="' + deconzList[i].mac + '"></div></td>';
             newRow += '</tr>';
             $("#deconzListTable>tbody:last").append(newRow);
             $("#actionbutton" + i).click(function (handler) {
@@ -119,6 +131,43 @@ function step2Valid() {
         $(".next-form").addClass("disabled");
     }
     $("#add_manual_ctrl_but").removeClass("disabled");
+}
+
+function step2FormCheckValid() {
+    console.dir("step2FormCheckValid",$("#ctrl_form")[0][0].validity.valid);
+    
+    if ($("#ctrl_form")[0][0].validity.valid) {
+        console.log("Valid");
+        $("#valid_manual_ctrl_but").removeClass("disabled");
+    } else {
+        console.log("pas Valid");
+        $("#valid_manual_ctrl_but").addClass("disabled");
+    }
+}
+function step2AddCtrl(handler) {
+    $(".next-form").addClass("disabled");
+    $("#valid_manual_ctrl_but").addClass("disabled");
+    $("#add_manual_ctrl_but").addClass("disabled");
+    var newRow = '<tr><td></td><td></td><td></td><td></td>';
+    newRow += '<td style="padding: 8px;"><div class="form-group"><input title="Adresse IP du contrôleur" type="ipman" class="form-control buttoninput" required id="ipman" name="ipman" placeholder="xxx.xxx.xxx.xxx" value="" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$"></div></td>';
+    newRow += '<td style="padding: 8px;"><div class="form-group"><input title="Port réseau du contrôleur"  type="portman" class="form-control buttoninput" required id="portman" name="portman" placeholder="xxxxx" value="" pattern="^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"></div></td>';
+    newRow += '<td style="padding: 8px;"><a id="valid_manual_ctrl_but" class="valid-ctrl btn btn-default fa fa-plus disabled" style="color:green"><font color="white"> Ajouter</font></a><a id="cancel_manual_ctrl_but" class="cancel-ctrl btn btn-default fa fa-minus" style="color:red"><font color="white"> Supprimer</font></a></td>';
+    newRow += '</tr>';
+    $("#deconzListTable>tbody:last").append(newRow);
+    $("#ipman").focus();
+    $('<input type="submit" value="Submit">').hide().appendTo("#ctrl_form").click().remove();
+    prepareInputValidate("#ipman");
+    prepareInputValidate("#portman");
+    $("#cancel_manual_ctrl_but").click(function (context) {
+        $("#ctrl_form").blur();
+        $("#deconzListTable tr:last").remove();
+        $("#add_manual_ctrl_but").removeClass("disabled");
+        step2Valid();
+    });
+    $("#valid_manual_ctrl_but").click(function (context) {
+        $("#ctrl_form").blur();
+        deconzcall.call('confirmIP', null, validCtrl);
+    });
 }
 
 function step3Process(resp) {
@@ -164,53 +213,13 @@ function step4Process() {
     $(".next-form").prop("disabled", false);
 }
 
-function validCheck() {
-    if ($("#ctrl_form")[0][0].validity.valid) {
-        $("#valid_manual_ctrl_but").removeClass("disabled");
-    } else {
-        $("#valid_manual_ctrl_but").addClass("disabled");
-    }
-}
-function addCtrl(handler) {
-    //var me = this;
-    //deconzcall = new deconzCall();
-    $(".next-form").addClass("disabled");
-    $("#valid_manual_ctrl_but").addClass("disabled");
-    $("#add_manual_ctrl_but").addClass("disabled");
-    var newRow = '<tr><td></td><td></td><td></td><td></td>';
-    newRow += '<td style="padding: 8px;"><div class="form-group"><input title="Adresse IP du contrôleur" type="ipman" class="form-control buttoninput" required id="ipman" name="ipman" placeholder="xxx.xxx.xxx.xxx" value="" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$"></div></td>';
-    newRow += '<td style="padding: 8px;"><div class="form-group"><input title="Port réseau du contrôleur"  type="portman" class="form-control buttoninput" required id="portman" name="portman" placeholder="xxxxx" value="" pattern="^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"></div></td>';
-    newRow += '<td style="padding: 8px;"><a id="valid_manual_ctrl_but" class="valid-ctrl btn btn-default fa fa-plus disabled" style="color:green"><font color="white"> Ajouter</font></a><a id="cancel_manual_ctrl_but" class="cancel-ctrl btn btn-default fa fa-minus" style="color:red"><font color="white"> Supprimer</font></a></td>';
-    newRow += '</tr>';
-    $("#deconzListTable>tbody:last").append(newRow);
-    $("#ipman").focus();
-    $('<input type="submit" value="Submit">').hide().appendTo("#ctrl_form").click().remove();
-    prepareInputValidate("#ipman");
-    prepareInputValidate("#portman");
-    $("#cancel_manual_ctrl_but").click(function (context) {
-        $("#ctrl_form").blur();
-        $("#deconzListTable tr:last").remove();
-        $("#add_manual_ctrl_but").removeClass("disabled");
-        step2Valid();
-    });
-    $("#valid_manual_ctrl_but").click(function (context) {
-        $("#ctrl_form").blur();
-        console.log("validctrl");
-        deconzcall.call('confirmIP', null, validCtrl);
-
-        //$("#deconzListTable tr:last").remove();
-        //$("#add_manual_ctrl_but").removeClass("disabled");
-        //step2Valid();
-    });
-}
-
 function validCtrl(resp) {
     console.dir(resp);
     if (resp.state === "ok") {
         deconzList.push({
             "id": resp.result.bridgeid,
             "internalipaddress": "10.0.0.19",
-            "macaddress": resp.result.mac,
+            "mac": resp.result.mac,
             "name": resp.result.name,
             "internalport": "80"
         });
@@ -221,14 +230,15 @@ function validCtrl(resp) {
 function prepareInputValidate(input) {
     var field = $(input);
     var form = field.closest("form");
+    var callback=step2FormCheckValid();
     field.blur(function () {
-        virtualsubmit(form);
+        virtualsubmit(form,step2FormCheckValid());
     });
-    field.focus(function (event) {
-        virtualsubmit(form);
+    field.focus(function () {
+        virtualsubmit(form,step2FormCheckValid());
     });
     field.keypress(function () {
-        virtualsubmit(form);
+        virtualsubmit(form,step2FormCheckValid());
     });
 }
 
@@ -236,7 +246,8 @@ function setHelp(help) {
     $("#stepHelp").html(help);
 }
 
-function virtualsubmit(form) {
-    $('<input type="submit" value="Submit">').hide().appendTo(form).click().remove();
+function virtualsubmit(form,callback) {
+    console.log("virtualsubmit");
+    $.when($('<input type="submit" value="Submit">').hide().appendTo(form).click().remove()).then(callback);
+    //step2FormCheckValid();
 }
-;

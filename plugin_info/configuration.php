@@ -40,7 +40,7 @@ if (!isConnect()) {
         <div class="alert alert-success hide"></div>
         <table class="table">
             <td class="col-sm-9">
-                <form id="ctrl_form" action="javascript:validCheck()">
+                <form id="ctrl_form" action="javascript:step2FormCheckValid()">
                     <fieldset>
                         <h2>Configuration: 3 étapes pour configurer le plugin</h2>
                         <div class="form-group">

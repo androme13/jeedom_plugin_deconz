@@ -24,7 +24,7 @@ $(document).ready(function () {
     total_forms = 3;
     $(".progress-bar").hide();
     $(".add_manual_ctrl_but").click(function (handler) {
-        addCtrl(handler);
+        step2AddCtrl(handler);
     });
     $(".next-form").click(function () {
         previous_form = $(this).parent();
