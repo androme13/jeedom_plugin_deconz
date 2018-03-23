@@ -20,7 +20,7 @@ var me = this;
 var deconzcall = new deconzCall();
 $(document).ready(function () {
     var form_count = 1, previous_form, next_form, total_forms;
-    
+
     total_forms = 3;
     $(".progress-bar").hide();
     $(".add_manual_ctrl_but").click(function (handler) {
@@ -90,7 +90,7 @@ $(document).ready(function () {
 
 function initialStepAction(form_count) {
     //me = this;
-    //deconzcall = new deconzCall();    
+    //deconzcall = new deconzCall();
     switch (form_count) {
         case 1 :
         {
@@ -144,9 +144,8 @@ function createTab(icon, text, action) {
     $("#deconz_config_tab").append(str);
 }
 
-function formKey(){
-  //  console.log("validform ?"+$("#ctrl_form").valid());
-        if ($("#ctrl_form").valid()) {
+function formKey() {
+    if ($("#ctrl_form").valid()) {
         console.log("Valid");
         $("#valid_manual_ctrl_but").removeClass("disabled");
     } else {

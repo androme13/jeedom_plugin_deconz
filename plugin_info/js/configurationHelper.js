@@ -172,25 +172,9 @@ function step2AddCtrl(handler) {
 
                 }
             }
-        },
-        success: function (label) {
-            //label.addClass("valid").text("Ok!");
-            // console.dir("validate success", $("#ctrl_form").valid());
-            console.dir("validate success");
-            //label.addClass("valid").text("Ok!");
-        },
-
-        submitHandler: function (form) {
-            console.dir("submitHandler");
-            return false;
-            // console.dir("validate", $("#ctrl_form").valid());
-            //$(form).ajaxSubmit();
         }
     });
     $("#ipman").focus();
-    // $('<input type="submit" value="Submit">').hide().appendTo("#ctrl_form").click().remove();
-    // prepareInputValidate("#ipman");
-    // prepareInputValidate("#portman");
     $("#cancel_manual_ctrl_but").click(function (context) {
         $("#ctrl_form").blur();
         $("#deconzListTable tr:last").remove();
