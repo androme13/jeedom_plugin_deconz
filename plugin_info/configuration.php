@@ -40,12 +40,12 @@ if (!isConnect()) {
         <div class="alert alert-success hide"></div>
         <table class="table">
             <td class="col-sm-9">
-                <form id="ctrl_form" action="javascript:step2FormCheckValid()">
+                <form id="ctrl_form" onkeyup="formKey()">
                     <fieldset>
                         <h2>Configuration: 3 étapes pour configurer le plugin</h2>
                         <div class="form-group">
                             <br><b><span style="text-decoration: underline;">Etape 1:</span></b><br>
-                            Configuration des contrôleurs DeCONZ .<br>
+                            Recherche et ajout manuel des contrôleurs DeCONZ.<br>
                             <br><b><span style="text-decoration: underline;">Etape 2:</span></b><br>
                             Configuration des clés API des contrôleurs.<br>
                             <br><b><span style="text-decoration: underline;">Etape 3:</span></b><br>
@@ -55,7 +55,7 @@ if (!isConnect()) {
                         <a class="next-form btn btn-info fa fa-play"> Commencer</a>
                     </fieldset>
                     <fieldset>
-                        <h2>Etape 1: Recherche des contrôleurs DeCONZ</h2>
+                        <h2>Etape 1: Recherche et ajout manuel des contrôleurs DeCONZ.</h2>
                         <table class="table" id="deconzListTable">
                             <tr>
                                 <th>Action</th>
@@ -84,7 +84,7 @@ if (!isConnect()) {
 
                     </fieldset>
                     <fieldset>
-                        <h2> Etape 2: Obtenir une clé d'accès</h2>
+                        <h2> Etape 2: Obtenir une clé d'accès.</h2>
                         <div class="form-group">
                             <table class="table" id="apiKeyTable">
                                 <tr>
@@ -104,7 +104,7 @@ if (!isConnect()) {
                         <a name="next" class="next-form btn btn-default fa fa-step-forward"> Suivant</a>
                     </fieldset>
                     <fieldset>
-                        <h2>Etape 3: Validation des informations</h2>
+                        <h2>Etape 3: Validation des informations.</h2>
                         <table class="table">
                             <tr><td class="col-sm-2"><span class="label control-label" style="font-size : 1em;">Adresse IP de DeCONZ</span></td><td><span class="label label-default" style="font-size : 1em;">value</span></tr>
                             <tr><td class="col-sm-2"><span class="label control-label" style="font-size : 1em;">Port DeCONZ</span></td><td><span class="label label-default" style="font-size : 1em;">value</span></tr>
@@ -122,12 +122,11 @@ if (!isConnect()) {
         </table>
     </div>
 </div>
-
+<?php include_file('3rparty', 'jquery.validate.min', 'js', 'deconz'); ?>
 <?php include_file('core', 'deconzCall', 'js', 'deconz'); ?>
 <?php include_file('core', 'jeedomHelper', 'js', 'deconz'); ?>
 <?php include_file('plugin_info', 'guiHelper', 'js', 'deconz'); ?>
 <?php include_file('plugin_info', 'configurationHelper', 'js', 'deconz'); ?>
-
 <style type="text/css">
     #ctrl_form fieldset:not(:first-of-type) {
         display: none;
@@ -137,11 +136,11 @@ if (!isConnect()) {
         cursor: not-allowed;
         opacity: 0.6;
     }
-    .buttoninput:invalid {
+    .error {
         box-shadow: 0 0 5px 1px red;
     }
 
-    .buttoninput:valid {
+    .valid {
         box-shadow: 0 0 5px 1px greenyellow;
     }
 
@@ -192,6 +191,13 @@ if (!isConnect()) {
         from {opacity: 0;}
         to {opacity: 1;}
     }
+    
+    .my-error-class {
+    color:#FF0000;  /* red */
+}
+.my-valid-class {
+    color:#00CC00; /* green */
+}
 </style>
 
 

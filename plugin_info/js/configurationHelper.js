@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Plugin DeCONZ for jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
+
 "use strict";
 
 var deconzList = new Object();
@@ -26,6 +27,7 @@ function step1Process() {
 function step2Process(resp) {
     var i;
     deconzList = new Object();
+
     $("#add_manual_ctrl_but").removeClass("disabled");
     var help = '<b><span style="text-decoration: underline;">Etape 1:</span></b><br>';
     help += "Une recherche automatique de DeCONZ sera effectuée.";
@@ -33,14 +35,14 @@ function step2Process(resp) {
     help += ' sur le bouton "Ajout manuel".';
     setHelp(help);
     $(".next-form").addClass("disabled");
-    /* $('#ctrl_form').on('submit', function(e){
-         step2FormCheckValid;
-        //e.preventDefault();
-        //var len = $('#username').val().length;
-       // if (len < 6 && len > 1) {
-        //    this.submit();
-        //}
-    });*/
+    /*$('#ctrl_form').on('submit', function (e) {
+     console.log("submit");
+     e.preventDefault();
+     //var len = $('#username').val().length;
+     // if (len < 6 && len > 1) {
+     //    this.submit();
+     //}
+     });*/
     if (resp.state === "ok") {
         // on change le nom de certaines propriétés afin d'unifier
         for (i = 0; i < resp.result.length; i++) {
@@ -133,31 +135,62 @@ function step2Valid() {
     $("#add_manual_ctrl_but").removeClass("disabled");
 }
 
-function step2FormCheckValid() {
-    console.dir("step2FormCheckValid",$("#ctrl_form")[0][0].validity.valid);
-    
-    if ($("#ctrl_form")[0][0].validity.valid) {
-        console.log("Valid");
-        $("#valid_manual_ctrl_but").removeClass("disabled");
-    } else {
-        console.log("pas Valid");
-        $("#valid_manual_ctrl_but").addClass("disabled");
-    }
-}
 function step2AddCtrl(handler) {
     $(".next-form").addClass("disabled");
     $("#valid_manual_ctrl_but").addClass("disabled");
     $("#add_manual_ctrl_but").addClass("disabled");
     var newRow = '<tr><td></td><td></td><td></td><td></td>';
-    newRow += '<td style="padding: 8px;"><div class="form-group"><input title="Adresse IP du contrôleur" type="ipman" class="form-control buttoninput" required id="ipman" name="ipman" placeholder="xxx.xxx.xxx.xxx" value="" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$"></div></td>';
-    newRow += '<td style="padding: 8px;"><div class="form-group"><input title="Port réseau du contrôleur"  type="portman" class="form-control buttoninput" required id="portman" name="portman" placeholder="xxxxx" value="" pattern="^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"></div></td>';
+    newRow += '<td style="padding: 8px;"><div class="form-group"><input title="Veuillez saisir une adresse IP V4 valide." class= "form-control ipman" name="ipman" placeholder="xxx.xxx.xxx.xxx" ></div></td>';
+    newRow += '<td style="padding: 8px;"><div class="form-group"><input title="Veuillez saisir un port valide."  class="form-control" name="portman" placeholder="xxxxx"></input></div></td>';
     newRow += '<td style="padding: 8px;"><a id="valid_manual_ctrl_but" class="valid-ctrl btn btn-default fa fa-plus disabled" style="color:green"><font color="white"> Ajouter</font></a><a id="cancel_manual_ctrl_but" class="cancel-ctrl btn btn-default fa fa-minus" style="color:red"><font color="white"> Supprimer</font></a></td>';
     newRow += '</tr>';
     $("#deconzListTable>tbody:last").append(newRow);
+    $.validator.addMethod("ipv4", function (value, element) {
+        return this.optional(element) || /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i.test(value);
+    }, "Veuillez saisir une adresse IP V4 valide.");
+    $("#ctrl_form").validate({
+        rules: {         
+            error: function (label) {
+                //$(this).addClass("my-error-class");
+               // return false;
+            },
+            errorPlacement: function () {
+                return false;
+            },
+            ipman: {
+                required: true,
+                ipv4: true
+            },
+            portman: {
+                required: true,
+                range: [1, 65535]
+            },
+             messages: {
+                ipv4: {
+                          required: "We need your email address to contact you",
+                ipv4: "Your email address must be in the format of name@domain.com"
+
+                }
+            }
+        },
+        success: function (label) {
+            //label.addClass("valid").text("Ok!");
+            // console.dir("validate success", $("#ctrl_form").valid());
+            console.dir("validate success");
+            //label.addClass("valid").text("Ok!");
+        },
+
+        submitHandler: function (form) {
+            console.dir("submitHandler");
+            return false;
+            // console.dir("validate", $("#ctrl_form").valid());
+            //$(form).ajaxSubmit();
+        }
+    });
     $("#ipman").focus();
-    $('<input type="submit" value="Submit">').hide().appendTo("#ctrl_form").click().remove();
-    prepareInputValidate("#ipman");
-    prepareInputValidate("#portman");
+    // $('<input type="submit" value="Submit">').hide().appendTo("#ctrl_form").click().remove();
+    // prepareInputValidate("#ipman");
+    // prepareInputValidate("#portman");
     $("#cancel_manual_ctrl_but").click(function (context) {
         $("#ctrl_form").blur();
         $("#deconzListTable tr:last").remove();
@@ -168,6 +201,7 @@ function step2AddCtrl(handler) {
         $("#ctrl_form").blur();
         deconzcall.call('confirmIP', null, validCtrl);
     });
+    $("#ctrl_form").valid();
 }
 
 function step3Process(resp) {
@@ -227,27 +261,6 @@ function validCtrl(resp) {
     }
 }
 
-function prepareInputValidate(input) {
-    var field = $(input);
-    var form = field.closest("form");
-    var callback=step2FormCheckValid();
-    field.blur(function () {
-        virtualsubmit(form,step2FormCheckValid());
-    });
-    field.focus(function () {
-        virtualsubmit(form,step2FormCheckValid());
-    });
-    field.keypress(function () {
-        virtualsubmit(form,step2FormCheckValid());
-    });
-}
-
 function setHelp(help) {
     $("#stepHelp").html(help);
-}
-
-function virtualsubmit(form,callback) {
-    console.log("virtualsubmit");
-    $.when($('<input type="submit" value="Submit">').hide().appendTo(form).click().remove()).then(callback);
-    //step2FormCheckValid();
 }

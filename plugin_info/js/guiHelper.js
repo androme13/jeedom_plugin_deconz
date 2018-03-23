@@ -143,3 +143,14 @@ function createTab(icon, text, action) {
     str += '</td><td>' + text + '</td></table></button>';
     $("#deconz_config_tab").append(str);
 }
+
+function formKey(){
+  //  console.log("validform ?"+$("#ctrl_form").valid());
+        if ($("#ctrl_form").valid()) {
+        console.log("Valid");
+        $("#valid_manual_ctrl_but").removeClass("disabled");
+    } else {
+        console.log("pas Valid");
+        $("#valid_manual_ctrl_but").addClass("disabled");
+    }
+}
