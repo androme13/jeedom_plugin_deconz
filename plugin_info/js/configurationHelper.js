@@ -35,14 +35,6 @@ function step2Process(resp) {
     help += ' sur le bouton "Ajout manuel".';
     setHelp(help);
     $(".next-form").addClass("disabled");
-    /*$('#ctrl_form').on('submit', function (e) {
-     console.log("submit");
-     e.preventDefault();
-     //var len = $('#username').val().length;
-     // if (len < 6 && len > 1) {
-     //    this.submit();
-     //}
-     });*/
     if (resp.state === "ok") {
         // on change le nom de certaines propriétés afin d'unifier
         for (i = 0; i < resp.result.length; i++) {
@@ -150,10 +142,6 @@ function step2AddCtrl(handler) {
     }, "Veuillez saisir une adresse IP V4 valide.");
     $("#ctrl_form").validate({
         rules: {         
-            error: function (label) {
-                //$(this).addClass("my-error-class");
-               // return false;
-            },
             errorPlacement: function () {
                 return false;
             },
@@ -164,13 +152,6 @@ function step2AddCtrl(handler) {
             portman: {
                 required: true,
                 range: [1, 65535]
-            },
-             messages: {
-                ipv4: {
-                          required: "We need your email address to contact you",
-                ipv4: "Your email address must be in the format of name@domain.com"
-
-                }
             }
         }
     });

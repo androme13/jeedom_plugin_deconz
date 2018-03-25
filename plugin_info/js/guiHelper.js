@@ -63,51 +63,27 @@ $(document).ready(function () {
                 .css("width", percent + "%")
                 .html("Etape : " + (form_count - 1) + "/3");
     }
-    $("#ipform").submit(function (event) {
-        var error_message = '';
-        if (!$("#email").val()) {
-            error_message += "Please Fill Email Address";
-        }
-        if (!$("#password").val()) {
-            error_message += "<br>Please Fill Password";
-        }
-        if (!$("#mobile").val()) {
-            error_message += "<br>Please Fill Mobile Number";
-        }
-        // Display error if any else submit form
-        if (error_message) {
-            $('.alert-success').removeClass('hide').html(error_message);
-            return false;
-        } else {
-            return true;
-        }
-    });
     createTab("fa fa-download", "Installer un contrôleur<br>DeconZ localement", "localinstall");
     createTab("fa fa-search", "Detecter et configurer les <br>contrôleurs DeconZ", "detectandconfig");
-
     initialStepAction(form_count);
 });
 
 function initialStepAction(form_count) {
-    //me = this;
-    //deconzcall = new deconzCall();
+    $('#div_configurationAlert').hideAlert();
     switch (form_count) {
         case 1 :
         {
-            $('#div_configurationAlert').hideAlert();
             step1Process();
             break;
         }
         case 2 :
         {
-            $('#div_configurationAlert').hideAlert();
             $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, recherche de DeCONZ en cours ...', level: 'info'});
             deconzcall.call('search', null, step2Process);
             break;
         }
         case 3 :
         {
-            $('#div_configurationAlert').hideAlert();
             $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, tentative d\'obtention de la clé API de DeCONZ en cours ...', level: 'info'});
             var srv = [{'ip': '10.0.0.19', 'port': '80'}];
             deconzcall.call('getAPIKey', srv, step3Process);
@@ -121,7 +97,7 @@ function initialStepAction(form_count) {
     }
 }
 
-function openTab(evt, cityName) {
+function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
@@ -131,7 +107,7 @@ function openTab(evt, cityName) {
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    document.getElementById(cityName).style.display = "block";
+    document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
 }
 
