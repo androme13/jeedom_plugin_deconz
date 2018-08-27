@@ -73,8 +73,9 @@ class deconzCom {
 
     public function confirmIP() {       
         $opts = $this->default_CURLOPT;
-        //$opts[CURLOPT_URL] = 'http://' . $this->ip . '/api/config';
-        $opts[CURLOPT_URL] = 'http://10.0.0.19:80/api/config';
+       // $opts[CURLOPT_POSTFIELDS] = $param;
+        $opts[CURLOPT_URL] = 'http://' . $this->ip . '/api/config';
+        //$opts[CURLOPT_URL] = 'http://10.0.0.19:80/api/config';
         return self::genericResponseProcess($opts);
     }
 

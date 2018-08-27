@@ -30,6 +30,7 @@ try {
     $com = new deconzCom();
     switch ($action) {
         case 'confirmIP' :
+            $com->setIpPort($params->ip, $params->port);
             $resp = $com->confirmIP();
             $error = 'confirmIP Error';
             break;

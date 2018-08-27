@@ -30,8 +30,8 @@ function step2Process(resp) {
 
     $("#add_manual_ctrl_but").removeClass("disabled");
     var help = '<b><span style="text-decoration: underline;">Etape 1:</span></b><br>';
-    help += "Une recherche automatique de DeCONZ sera effectuée.";
-    help += " Vous pouvez toutefois ajouter un contrôleur manuellement en cliquant";
+    help += "Une recherche automatique des controleurs DeCONZ est effectuée.";
+    help += " Si toutefois aucun controleur n'est trouvé, vous pouvez ajouter un contrôleur manuellement en cliquant";
     help += ' sur le bouton "Ajout manuel".';
     setHelp(help);
     $(".next-form").addClass("disabled");
@@ -43,14 +43,14 @@ function step2Process(resp) {
         }
         deconzList = resp.result;
         step2TableGen();
-        $("#div_configurationAlert").showAlert({message: '{{DeCONZ trouvé}} : ' + deconzList.length + ' DeCONZ trouvé(s)', level: 'success'});
+        $("#div_configurationAlert").showAlert({message: '{{Controleur(s) trouvé}} : ' + deconzList.length + ' controleur(s) DeCONZ trouvé(s)', level: 'success'});
         $(".progress-bar").css({"background": "SteelBlue"});
     } else {
         console.dir(resp);
         if (resp.url) {
-            $("#div_configurationAlert").showAlert({message: "{{DeCONZ introuvable}} : " + "Erreur : " + resp.url + " " + resp.error + " (" + resp.code + ")", level: "danger"});
+            $("#div_configurationAlert").showAlert({message: "{{Controleur DeCONZ introuvable}} : " + "Erreur : " + resp.url + " " + resp.error + " (" + resp.code + ")", level: "danger"});
         } else {
-            $("#div_configurationAlert").showAlert({message: "{{DeCONZ introuvable}} : " + "Erreur : " + resp.result, level: "danger"});
+            $("#div_configurationAlert").showAlert({message: "{{Controleur DeCONZ introuvable}} : " + "Erreur : " + resp.result, level: "danger"});
         }
         $(".progress-bar").css({"background": "red"});
     }
@@ -75,7 +75,7 @@ function step2TableGen() {
             }
             var newRow = '<tr>';
             newRow += '<td style="vertical-align:middle;"><div class="form-group" align="center">';
-            newRow += '<a id="actionbutton' + i + '" title="Cliquez pour ne pas intègrer cet équipement" ndx=' + i + ' class="add_manual_ctrl_but btn-default fa fa-check-circle-o" style="font-size: 2.3em;color : green;cursor:pointer;padding: 4px;"></a>';
+            newRow += '<a id="actionbutton' + i + '" title="Cliquez pour ne pas intègrer ce controleur" ndx=' + i + ' class="add_manual_ctrl_but btn-default fa fa-check-circle-o" style="font-size: 2.3em;color : green;cursor:pointer;padding: 4px;"></a>';
             newRow += '</div></td>';
             newRow += '<td>';
             newRow += '<i id="typebutton' + i + '" title="' + typeComment + '" ndx=' + i + ' class="' + type + '" style="font-size: 2.2em;color : SteelBlue;padding: 6px 0px 0px 0px;"></i>';
@@ -213,7 +213,7 @@ function step4Process() {
 }
 
 function validCtrl(resp) {
-    console.dir(resp);
+    console.dir("validctrl",resp);
     if (resp.state === "ok") {
         deconzList.push({
             "id": resp.result.bridgeid,
@@ -223,6 +223,7 @@ function validCtrl(resp) {
             "internalport": "80"
         });
         step2TableGen();
+        //step2Valid;
     }
 }
 

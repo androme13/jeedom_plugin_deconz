@@ -63,8 +63,8 @@ $(document).ready(function () {
                 .css("width", percent + "%")
                 .html("Etape : " + (form_count - 1) + "/3");
     }
-    createTab("fa fa-download", "Installer un contrôleur<br>DeconZ localement", "localinstall");
-    createTab("fa fa-search", "Detecter et configurer les <br>contrôleurs DeconZ", "detectandconfig");
+    createTab("fa fa-download", "Installer un controleur<br>DeconZ localement", "localinstall");
+    createTab("fa fa-search", "Detecter et configurer les <br>controleurs DeconZ", "detectandconfig");
     initialStepAction(form_count);
 });
 
@@ -79,6 +79,7 @@ function initialStepAction(form_count) {
         case 2 :
         {
             $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, recherche de DeCONZ en cours ...', level: 'info'});
+            //var srv = [{'ip': '10.0.0.19', 'port': '80'}];
             deconzcall.call('search', null, step2Process);
             break;
         }
