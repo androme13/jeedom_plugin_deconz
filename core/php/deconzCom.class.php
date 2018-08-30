@@ -103,10 +103,13 @@ class deconzCom {
         $datas = json_decode($response->message);
         for ($i=0;$i<count($datas);$i++)
         {
-            error_log("log(".$i."): ".$datas[$i]->internalipaddress, 0);
-           
+            //{"apiversion":"1.0.9","bridgeid":"00212EFFFF01101B","datastoreversion":"60","devicename":"ConBee","factorynew":false,"mac":"b8:27:eb:12:72:4c","modelid":"deCONZ","name":"deCONZ-GW","replacesbridgeid":null,"starterkitid":"","swversion":"2.5.35"}
+            $config=json_decode(self::confirmIP($datas[$i]->internalipaddress)->message);
+            // on change le nom de certaines propriétés afin d'unifier
+            unset($datas[$i]->macaddress);
+            $datas[$i]->mac=$config->mac;
+            
         }
-        //
         $response->message=json_encode($datas);
         return $response;
         //return self::genericResponseProcess($opts);

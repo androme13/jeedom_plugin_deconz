@@ -38,11 +38,6 @@ function step2Process(resp) {
     console.log(resp);
     console.dir(resp);
     if (resp.state === "ok") {
-        // on change le nom de certaines propriétés afin d'unifier
-        for (i = 0; i < resp.result.length; i++) {
-            resp.result[i].mac = resp.result[i]['macaddress'];
-            delete resp.result[i].macaddress;
-        }
         deconzList = resp.result;
         step2TableGen();
         $("#div_configurationAlert").showAlert({message: '{{Controleur(s) trouvé}} : ' + deconzList.length + ' controleur(s) DeCONZ trouvé(s)', level: 'success'});
@@ -85,7 +80,7 @@ function step2TableGen() {
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + deconzList[i].id + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + deconzList[i].name + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="internalipaddress' + i + '" class="form-control" required id="internalipaddress' + i + '" name="internalipaddress" placeholder="Ip" value="' + deconzList[i].internalipaddress + '"></div></td>';
-            newRow += '<td style="padding: 8px;" class="col-sm-2"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + deconzList[i].internalport + '"></div></td>';
+            newRow += '<td style="padding: 8px;" class="col-sm-1"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + deconzList[i].internalport + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="macaddress" class="form-control" required id="macaddress" name="macaddress' + i + '" placeholder="macaddress" value="' + deconzList[i].mac + '"></div></td>';
             newRow += '</tr>';
             $("#deconzListTable>tbody:last").append(newRow);
