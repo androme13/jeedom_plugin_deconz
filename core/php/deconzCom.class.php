@@ -71,12 +71,15 @@ class deconzCom {
         }
     }
 
-    public function confirmIP() {       
+    public function confirmIP($ip=null) {
+        if ($ip==null) $ip = $this->ip;
         $opts = $this->default_CURLOPT;
        // $opts[CURLOPT_POSTFIELDS] = $param;
-        $opts[CURLOPT_URL] = 'http://' . $this->ip . '/api/config';
+        $opts[CURLOPT_URL] = 'http://' . $ip . '/api/config';
         //$opts[CURLOPT_URL] = 'http://10.0.0.19:80/api/config';
+
         return self::genericResponseProcess($opts);
+
     }
 
     public function deleteDeConzUser($user = '') {
@@ -96,7 +99,17 @@ class deconzCom {
     public function findDeConz() {
         $opts = $this->default_CURLOPT;
         $opts[CURLOPT_URL] = 'http://dresden-light.appspot.com/discover';
-        return self::genericResponseProcess($opts);
+        $response = self::genericResponseProcess($opts);
+        $datas = json_decode($response->message);
+        for ($i=0;$i<count($datas);$i++)
+        {
+            error_log("log(".$i."): ".$datas[$i]->internalipaddress, 0);
+           
+        }
+        //
+        $response->message=json_encode($datas);
+        return $response;
+        //return self::genericResponseProcess($opts);
     }
 
     private function genericDelete($url = null, $param = null) {

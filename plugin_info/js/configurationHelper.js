@@ -35,6 +35,8 @@ function step2Process(resp) {
     help += ' sur le bouton "Ajout manuel".';
     setHelp(help);
     $(".next-form").addClass("disabled");
+    console.log(resp);
+    console.dir(resp);
     if (resp.state === "ok") {
         // on change le nom de certaines propriétés afin d'unifier
         for (i = 0; i < resp.result.length; i++) {
