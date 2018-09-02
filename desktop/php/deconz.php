@@ -7,7 +7,24 @@ sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
 deconz::test();
 ?>
-
+<style>
+    .panel-title > legend > div:before {
+        float: right !important;
+        font-family: "Glyphicons Halflings";
+        content: "<i class='techno techno-pc'></i>";
+        padding-right: 5px;
+    }
+    .panel-title > legend > div.collapsed:before {
+        float: right !important;
+        font-family: "Glyphicons Halflings";
+        content: "<i class='techno techno-pc'></i>";
+    }
+    .panel-title > legend > a:hover, 
+    .panel-title > legend > a:active, 
+    .panel-title > legend > a:focus  {
+        text-decoration:none;
+    }
+</style>
 <div class="row row-overflow">
     <div class="col-lg-2 col-md-3 col-sm-4">
         <div class="bs-sidebar">
@@ -25,8 +42,8 @@ deconz::test();
     </div>
 
     <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px;">
-        <legend>{{Mes templates}}</legend>
-        <legend><i class="fa fa-cog"></i>  {{Gestion}}</legend>
+        <legend>{{DeCONZ}}</legend>
+        <legend><i class="fa fa-cog"></i>  {{Gestion du plugin}}</legend>
         <div class="eqLogicThumbnailContainer">
             <div class="cursor eqLogicAction" data-action="add" style="text-align: center; background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
                 <i class="fa fa-plus-circle" style="font-size : 6em;color:#94ca02;"></i>
@@ -39,8 +56,39 @@ deconz::test();
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676">{{Configuration}}</span>
             </div>
         </div>
-        <legend><i class="fa fa-table"></i> {{Mes templates}}</legend>
+
+        <div id="ctrlListPanelLegend">
+                <legend  data-toggle="collapse" href="#ctrlListPanel" aria-expanded="true" aria-controls="ctrlListPanel">
+                    <i class="techno techno-pc"></i>
+                    Controlleurs
+                                        <i id="ctrlListPanelIcon" class="fa fa-chevron-down"></i>
+
+                </legend>
+        </div>
+
+        <div id="ctrlListPanel" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                coucou
+                <div class="eqLogicThumbnailContainer" id="ctrlListPanel">
+                    <?php
+                    foreach ($eqLogics as $eqLogic) {
+                        $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
+                        echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="text-align: center; background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
+                        echo '<img src="' . $plugin->getPathImgIcon() . '" height="105" width="95" />';
+                        echo "<br>";
+                        echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;">' . $eqLogic->getHumanName(true, true) . '</span>';
+                        echo '</div>';
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+
+
+
+        <legend><i class="fa fa-table"></i> {{Equipements}}</legend>
         <div class="eqLogicThumbnailContainer">
+            coucou
             <?php
             foreach ($eqLogics as $eqLogic) {
                 $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');

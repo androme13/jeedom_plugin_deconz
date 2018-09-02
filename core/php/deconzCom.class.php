@@ -74,12 +74,8 @@ class deconzCom {
     public function confirmIP($ip=null) {
         if ($ip==null) $ip = $this->ip;
         $opts = $this->default_CURLOPT;
-       // $opts[CURLOPT_POSTFIELDS] = $param;
         $opts[CURLOPT_URL] = 'http://' . $ip . '/api/config';
-        //$opts[CURLOPT_URL] = 'http://10.0.0.19:80/api/config';
-
         return self::genericResponseProcess($opts);
-
     }
 
     public function deleteDeConzUser($user = '') {

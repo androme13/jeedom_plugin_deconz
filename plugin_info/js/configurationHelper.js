@@ -25,9 +25,7 @@ function step1Process() {
 }
 
 function step2Process(resp) {
-    var i;
     deconzList = new Object();
-
     $("#add_manual_ctrl_but").removeClass("disabled");
     var help = '<b><span style="text-decoration: underline;">Etape 1:</span></b><br>';
     help += "Une recherche automatique des controleurs DeCONZ est effectuée.";
@@ -35,15 +33,15 @@ function step2Process(resp) {
     help += ' sur le bouton "Ajout manuel".';
     setHelp(help);
     $(".next-form").addClass("disabled");
-    console.log(resp);
-    console.dir(resp);
+    //console.log(resp);
+    //console.dir(resp);
     if (resp.state === "ok") {
         deconzList = resp.result;
         step2TableGen();
         $("#div_configurationAlert").showAlert({message: '{{Controleur(s) trouvé}} : ' + deconzList.length + ' controleur(s) DeCONZ trouvé(s)', level: 'success'});
         $(".progress-bar").css({"background": "SteelBlue"});
     } else {
-        console.dir(resp);
+        //console.dir(resp);
         if (resp.url) {
             $("#div_configurationAlert").showAlert({message: "{{Controleur DeCONZ introuvable}} : " + "Erreur : " + resp.url + " " + resp.error + " (" + resp.code + ")", level: "danger"});
         } else {

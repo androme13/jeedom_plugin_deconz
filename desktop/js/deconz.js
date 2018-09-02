@@ -15,11 +15,20 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+console.log("test");
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 /*
  * Fonction pour l'ajout de commande, appellé automatiquement par plugin.template
  */
+$('#ctrlListPanelLegend').on("click", function () {
+    console.log("click");
+//$('#display_advance').toggle('1000');    
+    if ($("#ctrlListPanel").is(":visible")) {
+        $('#ctrlListPanelIcon').addClass('fa-chevron-up').removeClass('fa-chevron-down');
+    } else
+        $('#ctrlListPanelIcon').addClass('fa-chevron-down').removeClass('fa-chevron-up');
+});
+
 function addCmdToTable(_cmd) {
     if (!isset(_cmd)) {
         var _cmd = {configuration: {}};
