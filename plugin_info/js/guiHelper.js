@@ -78,8 +78,7 @@ function initialStepAction(form_count) {
         }
         case 2 :
         {
-            $('#div_configurationAlert').showAlert({message: 'Veuillez patienter, recherche de DeCONZ en cours ...', level: 'info'});
-            //var srv = [{'ip': '10.0.0.19', 'port': '80'}];
+            $('#div_ctrlSearchConfigurationAlert').showAlert({message: 'Veuillez patienter, recherche de DeCONZ en cours ...', level: 'info'});
             deconzcall.call('search', null, step2Process);
             break;
         }
@@ -123,10 +122,10 @@ function createTab(icon, text, action) {
 
 function formKey() {
     if ($("#ctrl_form").valid()) {
-        console.log("Valid");
+        //console.log("Valid");
         $("#valid_manual_ctrl_but").removeClass("disabled");
     } else {
-        console.log("pas Valid");
+        //console.log("pas Valid");
         $("#valid_manual_ctrl_but").addClass("disabled");
     }
 }

@@ -57,6 +57,7 @@ if (!isConnect()) {
                     <fieldset>
                         <h2>Etape 1: Recherche et ajout manuel des contrôleurs DeCONZ.</h2>
                         <table class="table" id="deconzListTable">
+                            <tr><div id="div_ctrlSearchConfigurationAlert" style="display: none;"></div></tr>
                             <tr>
                                 <th>Action</th>
                                 <th>Type</th>

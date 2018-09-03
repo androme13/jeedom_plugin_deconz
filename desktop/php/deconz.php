@@ -44,7 +44,7 @@ deconz::test();
         <div id="ctrlListPanelLegend">
             <legend  data-toggle="collapse" href="#ctrlListPanel" aria-expanded="true" aria-controls="ctrlListPanel">
                 <i class="techno techno-pc"></i>
-                Controlleurs
+                Controleurs
                 <i id="ctrlListPanelIcon" class="fa fa-chevron-down"></i>
             </legend>
         </div>
@@ -65,9 +65,6 @@ deconz::test();
                 </div>
             </div>
         </div>
-
-
-
         <legend><i class="fa fa-table"></i> {{Equipements}}</legend>
         <div class="eqLogicThumbnailContainer">
             coucou

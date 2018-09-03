@@ -31,10 +31,11 @@ class deconzCom {
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => false,
         //CURLOPT_SSLVERSION => 3,
-        CURLOPT_TIMEOUT => 30
+        CURLOPT_TIMEOUT => 5
     ];
     private $apikey = null;
     private $ip = null;
+    private $port = null;
     private $responseHelper = array('error' => 0, 'message' => '', 'state' => '');
     private $deconzHTTPErrors = [
         '200' => ['name' => 'OK', 'desc' => 'Request succeded'],
@@ -71,11 +72,24 @@ class deconzCom {
         }
     }
 
-    public function confirmIP($ip=null) {
-        if ($ip==null) $ip = $this->ip;
+    public function confirmIP($ip = null, $port = null) {
+        if ($ip == null) {
+            $ip = $this->ip;
+        }
+        if ($port == null) {
+            $port = $this->port;
+        }
         $opts = $this->default_CURLOPT;
         $opts[CURLOPT_URL] = 'http://' . $ip . '/api/config';
-        return self::genericResponseProcess($opts);
+        $opts[CURLOPT_PORT] = $port;
+        $resp = self::genericResponseProcess($opts);
+        if ($resp->state === 'ok') {
+            $jsonObj = json_decode($resp->message);
+            $jsonObj->internalipaddress = $ip;
+            $jsonObj->internalport = $port;
+            $resp->message = json_encode($jsonObj);
+        }
+        return $resp;
     }
 
     public function deleteDeConzUser($user = '') {
@@ -95,20 +109,14 @@ class deconzCom {
     public function findDeConz() {
         $opts = $this->default_CURLOPT;
         $opts[CURLOPT_URL] = 'http://dresden-light.appspot.com/discover';
+        $opts[CURLOPT_PORT] = 80;
         $response = self::genericResponseProcess($opts);
         $datas = json_decode($response->message);
-        for ($i=0;$i<count($datas);$i++)
-        {
-            //{"apiversion":"1.0.9","bridgeid":"00212EFFFF01101B","datastoreversion":"60","devicename":"ConBee","factorynew":false,"mac":"b8:27:eb:12:72:4c","modelid":"deCONZ","name":"deCONZ-GW","replacesbridgeid":null,"starterkitid":"","swversion":"2.5.35"}
-            $config=json_decode(self::confirmIP($datas[$i]->internalipaddress)->message);
-            // on change le nom de certaines propriétés afin d'unifier
-            unset($datas[$i]->macaddress);
-            $datas[$i]->mac=$config->mac;
-            
+        for ($i = 0; $i < count($datas); $i++) {
+            $datas[$i] = json_decode(self::confirmIP($datas[$i]->internalipaddress, $datas[$i]->internalport)->message);
         }
-        $response->message=json_encode($datas);
+        $response->message = json_encode($datas);
         return $response;
-        //return self::genericResponseProcess($opts);
     }
 
     private function genericDelete($url = null, $param = null) {
@@ -318,12 +326,15 @@ class deconzCom {
         }
     }
 
-    public function setIpPort($ip = null, $port = null) {
-        if ($ip != null) {
-            $this->ip = $ip;
+    public function setIpPort($newip = null, $newport = null) {
+        
+        if ($newip != null) {
+            $this->ip = $newip;
+           // $GLOBALS['ip'] = $ip;
         }
-        if ($port != null) {
-            $this->port = $port;
+        if ($newport != null) {
+            $this->port = $newport;
+           // $GLOBALS['port'] = $port;
         }
     }
 

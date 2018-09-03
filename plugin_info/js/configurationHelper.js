@@ -38,14 +38,14 @@ function step2Process(resp) {
     if (resp.state === "ok") {
         deconzList = resp.result;
         step2TableGen();
-        $("#div_configurationAlert").showAlert({message: '{{Controleur(s) trouvé}} : ' + deconzList.length + ' controleur(s) DeCONZ trouvé(s)', level: 'success'});
+        $("#div_ctrlSearchConfigurationAlert").showAlert({message: '{{Controleur(s) trouvé}} : ' + deconzList.length + ' controleur(s) DeCONZ trouvé(s)', level: 'success'});
         $(".progress-bar").css({"background": "SteelBlue"});
     } else {
         //console.dir(resp);
         if (resp.url) {
-            $("#div_configurationAlert").showAlert({message: "{{Controleur DeCONZ introuvable}} : " + "Erreur : " + resp.url + " " + resp.error + " (" + resp.code + ")", level: "danger"});
+            $("#div_ctrlSearchConfigurationAlert").showAlert({message: "{{Controleur DeCONZ introuvable}} : " + "Erreur : " + resp.url + " " + resp.error + " (" + resp.code + ")", level: "danger"});
         } else {
-            $("#div_configurationAlert").showAlert({message: "{{Controleur DeCONZ introuvable}} : " + "Erreur : " + resp.result, level: "danger"});
+            $("#div_ctrlSearchConfigurationAlert").showAlert({message: "{{Controleur DeCONZ introuvable}} : " + "Erreur : " + resp.result, level: "danger"});
         }
         $(".progress-bar").css({"background": "red"});
     }
@@ -75,7 +75,7 @@ function step2TableGen() {
             newRow += '<td>';
             newRow += '<i id="typebutton' + i + '" title="' + typeComment + '" ndx=' + i + ' class="' + type + '" style="font-size: 2.2em;color : SteelBlue;padding: 6px 0px 0px 0px;"></i>';
             newRow += '</td>';
-            newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + deconzList[i].id + '"></div></td>';
+            newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + deconzList[i].bridgeid + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + deconzList[i].name + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="internalipaddress' + i + '" class="form-control" required id="internalipaddress' + i + '" name="internalipaddress" placeholder="Ip" value="' + deconzList[i].internalipaddress + '"></div></td>';
             newRow += '<td style="padding: 8px;" class="col-sm-1"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + deconzList[i].internalport + '"></div></td>';
@@ -136,7 +136,7 @@ function step2AddCtrl(handler) {
         return this.optional(element) || /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i.test(value);
     }, "Veuillez saisir une adresse IP V4 valide.");
     $("#ctrl_form").validate({
-        rules: {         
+        rules: {
             errorPlacement: function () {
                 return false;
             },
@@ -155,11 +155,14 @@ function step2AddCtrl(handler) {
         $("#ctrl_form").blur();
         $("#deconzListTable tr:last").remove();
         $("#add_manual_ctrl_but").removeClass("disabled");
+        $("#div_ctrlSearchConfigurationAlert").hide();
         step2Valid();
     });
     $("#valid_manual_ctrl_but").click(function (context) {
         $("#ctrl_form").blur();
-        deconzcall.call('confirmIP', null, validCtrl);
+        $("input[name=ipman]").val();
+        var srv = {'ip': $("input[name=ipman]").val(), 'port': $("input[name=portman]").val()};
+        deconzcall.call('confirmIP', srv, validCtrl);
     });
     $("#ctrl_form").valid();
 }
@@ -208,18 +211,22 @@ function step4Process() {
 }
 
 function validCtrl(resp) {
-    console.dir("validctrl",resp);
     if (resp.state === "ok") {
-        deconzList.push({
-            "id": resp.result.bridgeid,
-            "internalipaddress": "10.0.0.19",
-            "mac": resp.result.mac,
-            "name": resp.result.name,
-            "internalport": "80"
-        });
-        step2TableGen();
-        //step2Valid;
+        if (deconzList.indexOf(resp.result.bridgeid)!==-1) {
+            deconzList.push(resp.result);
+            step2TableGen();
+            $("#div_ctrlSearchConfigurationAlert").showAlert({message: 'Controleur ajouté manuellement Trouvé : ' + resp.result.name + ' (' + resp.result.internalipaddress + ')', level: 'info'});
+
+        } else
+        {
+            step2TableGen();
+            $("#div_ctrlSearchConfigurationAlert").showAlert({message: 'Controleur ajouté manuellement déja présent dans la liste ('+resp.result.bridgeid+')', level: 'warning'});
+        }
+    } else
+    {
+        $("#div_ctrlSearchConfigurationAlert").showAlert({message: resp.result, level: 'danger'});
     }
+    
 }
 
 function setHelp(help) {

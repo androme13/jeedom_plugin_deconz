@@ -30,11 +30,12 @@ try {
     $com = new deconzCom();
     switch ($action) {
         case 'confirmIP' :
-            $com->setIpPort($params->ip, $params->port);
-            $resp = $com->confirmIP();
+            //$com->setIpPort($params->ip, $params->port);
+            $resp = $com->confirmIP($params->ip, $params->port);
             $error = 'confirmIP Error';
             break;
         case 'search' :
+            //$com->setIpPort($params->ip, $params->port);
             $resp = $com->findDeCONZ();
             $error = 'Search Error';
             break;
