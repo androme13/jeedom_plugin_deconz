@@ -203,7 +203,7 @@ class deconzCom {
         return $response;
     }
 
-    public function getAPIAccess() {
+    public function getAPIAccess($usr='delight',$pwd='delight') {
 // méthode 1
         $opts = $this->default_CURLOPT;
         $opts[CURLOPT_POST] = true;
@@ -215,12 +215,8 @@ class deconzCom {
         }
 // si la premère méthode échoue on passe à la seconde
 //user et pwd par défaut
-        $usr = "delight";
-        $pwd = "delight";
         $opts[CURLOPT_HTTPHEADER] = array('Content-Type: application/json', 'Authorization: Basic ' . base64_encode(utf8_encode($usr . ':' . $pwd)));
         return self::genericResponseProcess($opts);
-        //$response = self::genericResponseProcess($opts);
-        //return $response;
     }
 
     public function getConf() {
@@ -327,14 +323,11 @@ class deconzCom {
     }
 
     public function setIpPort($newip = null, $newport = null) {
-        
         if ($newip != null) {
             $this->ip = $newip;
-           // $GLOBALS['ip'] = $ip;
         }
         if ($newport != null) {
             $this->port = $newport;
-           // $GLOBALS['port'] = $port;
         }
     }
 

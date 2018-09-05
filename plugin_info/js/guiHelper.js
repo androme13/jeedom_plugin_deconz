@@ -15,6 +15,8 @@
  * along with Plugin DeCONZ for jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global step2Process, step3Process */
+
 "use strict";
 var me = this;
 var deconzcall = new deconzCall();
