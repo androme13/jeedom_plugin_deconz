@@ -1,9 +1,12 @@
 {
-    "name": "Controller",	
+    "name": "Generic",
+    "isEnable": true,
+    "isVisible": true,
     "configuration": {
-        "state": true,
-        "hidden": false,
-        "type": "Controller" 	
+        "bridgeid": null,
+        "ipaddress": null,
+        "type": "controller",
+        "websocketport": null
     },
     "commands": [
         {

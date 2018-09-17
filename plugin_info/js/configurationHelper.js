@@ -40,7 +40,7 @@ function step2Process(resp) {
         $(".progress-bar").css({"background": "SteelBlue"});
         step2TableGen();
         $("#div_ctrlSearchConfigurationAlert").showAlert({message: '{{Controleur(s) trouvé}} : ' + deconzList.length + ' controleur(s) DeCONZ trouvé(s)', level: 'success'});
-        
+
     } else {
         //console.dir(resp);
         if (resp.url) {
@@ -83,14 +83,14 @@ function step2TableGen() {
             newRow += '<i id="typebutton' + i + '" title="' + typeComment + '" ndx=' + i + ' class="' + type + '" style="font-size: 2.2em;color : SteelBlue;padding: 6px 0px 0px 0px;"></i>';
             newRow += '</td>';
             //La version de ce controleur n\'est pas correcte
-            newRow +='<td';
+            newRow += '<td';
             if (checkVersion === true) {
                 newRow += ' style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + deconzList[i].bridgeid + '"></div>';
             } else {
                 newRow += ' style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + deconzList[i].bridgeid + '"></div>';
-                newRow += '<i class="fa fa-exclamation-triangle" style="color:red;"></i><font color="white"> Version incorrecte.<br>Version actuelle : '+deconzList[i].swversion+'<br>Version mini : '+versionMini+'</font>';
+                newRow += '<i class="fa fa-exclamation-triangle" style="color:red;"></i><font color="white"> Version incorrecte.<br>Version actuelle : ' + deconzList[i].swversion + '<br>Version mini : ' + versionMini + '</font>';
             }
-            newRow +='</td>';
+            newRow += '</td>';
 
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + deconzList[i].name + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="internalipaddress' + i + '" class="form-control" required id="internalipaddress' + i + '" name="internalipaddress" placeholder="Ip" value="' + deconzList[i].internalipaddress + '"></div></td>';
@@ -184,6 +184,8 @@ function step2AddCtrl(handler) {
         deconzcall.call('confirmIP', srv, validCtrl);
     });
     $("#ctrl_form").valid();
+    $("input[name=ipman]").focus();
+    
 }
 
 function step3Process(resp) {
@@ -233,20 +235,19 @@ function step4Process() {
 
 function validCtrl(resp) {
     if (resp.state === "ok") {
-        /* if (deconzList.indexOf(resp.result.bridgeid)!==-1) {
-         deconzList.push(resp.result);
-         step2TableGen();
-         $("#div_ctrlSearchConfigurationAlert").showAlert({message: 'Controleur ajouté manuellement Trouvé : ' + resp.result.name + ' (' + resp.result.internalipaddress + ')', level: 'info'});
-         
-         } else
-         {
-         step2TableGen();
-         $("#div_ctrlSearchConfigurationAlert").showAlert({message: 'Controleur ajouté manuellement déja présent dans la liste ('+resp.result.bridgeid+')', level: 'warning'});
-         }*/
+        if (deconzList.indexOf(resp.result.bridgeid) !== -1) {
+            deconzList.push(resp.result);
+            step2TableGen();
+            $("#div_ctrlSearchConfigurationAlert").showAlert({message: 'Controleur ajouté manuellement Trouvé : ' + resp.result.name + ' (' + resp.result.internalipaddress + ')', level: 'info'});
+
+        } else
+        {
+            step2TableGen();
+            $("#div_ctrlSearchConfigurationAlert").showAlert({message: 'Controleur ajouté manuellement déja présent dans la liste (' + resp.result.bridgeid + ')', level: 'warning'});
+        }
         deconzList.push(resp.result);
         step2TableGen();
         $("#div_ctrlSearchConfigurationAlert").showAlert({message: 'Controleur ajouté manuellement Trouvé : ' + resp.result.name + ' (' + resp.result.internalipaddress + ')', level: 'info'});
-
     } else
     {
         $("#div_ctrlSearchConfigurationAlert").showAlert({message: 'Impossible d\'ajouter le controleur, erreur : ' + resp.result, level: 'danger'});
@@ -254,7 +255,7 @@ function validCtrl(resp) {
 
 }
 
-function setHelp(help) {
+function setHelp(help) {    
     $("#stepHelp").html(help);
 }
 

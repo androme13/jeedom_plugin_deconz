@@ -39,7 +39,7 @@ if (!isConnect()) {
         </div>
         <div class="alert alert-success hide"></div>
         <table class="table">
-            <td class="col-sm-9">
+            <td class="col-sm-11">
                 <form id="ctrl_form" onkeyup="formKey()">
                     <fieldset>
                         <h2>Configuration: 3 étapes pour configurer le plugin</h2>
@@ -117,7 +117,7 @@ if (!isConnect()) {
                 </form>
             </td>
             <td>
-                <div id="stepHelp">
+                <div id="stepHelp" style="width:200px;">
                 </div>
             </td>
         </table>

@@ -14,6 +14,8 @@
  * along with Plugin DeCONZ for jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
+"use strict";
+
 class jeedomHelper {
     log(logName, level, message) {
         var url = "plugins/deconz/core/ajax/jeedom4JS.ajax.php";
