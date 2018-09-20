@@ -82,25 +82,31 @@ if (!isConnect()) {
                         </table>
                         <a name="previous" id="" class="previous-form btn btn-default fa fa-step-backward"> Précédent</a>
                         <a name="next" id="next-form" class="next-form btn btn-default fa fa-step-forward"> Suivant</a>
-
                     </fieldset>
                     <fieldset>
                         <h2> Etape 2: Obtenir une clé d'accès.</h2>
-                        <div class="form-group">
-                            <table class="table" id="apiKeyTable">
-                                <tr>
-                                    <th>Action</th>
-                                    <th>Status</th>
-                                    <th>Id</th>
-                                    <th>Nom</th>
-                                    <th>Ip</th>
-                                    <th>Mac</th>
-                                    <th>Api Key</th>
-                                </tr>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
+                        <table class="table" id="apiKeyTable">
+                            <tr><div id="div_apikeySearchConfigurationAlert" style="display: none;"></div></tr>
+                            <tr>
+                                <th>Action</th>
+                                <th>Status</th>
+                                <th>Id</th>
+                                <th>Nom</th>
+                                <th>Ip</th>
+                                <th>Mac</th>
+                                <th>Api Key</th>
+                            </tr>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <table padding="0px 0px 0px 0px" style="width:100%;">
+                            <tr valign="top">
+                                <td>
+                                    <div align="left" id="apicancelreason"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
                         <a name="previous" class="previous-form btn btn-default fa fa-step-backward"> Précédent</a>
                         <a name="next" class="next-form btn btn-default fa fa-step-forward"> Suivant</a>
                     </fieldset>
@@ -192,13 +198,13 @@ if (!isConnect()) {
         from {opacity: 0;}
         to {opacity: 1;}
     }
-    
+
     .my-error-class {
-    color:#FF0000;  /* red */
-}
-.my-valid-class {
-    color:#00CC00; /* green */
-}
+        color:#FF0000;  /* red */
+    }
+    .my-valid-class {
+        color:#00CC00; /* green */
+    }
 </style>
 
 

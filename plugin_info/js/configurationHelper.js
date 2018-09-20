@@ -74,7 +74,7 @@ function step2TableGen() {
             var newRow = '<tr>';
             newRow += '<td style="vertical-align:middle;"><div class="form-group" align="center">';
             if (checkVersion === true) {
-                newRow += '<a id="actionbutton' + i + '" title="Cliquez pour ne pas intègrer ce controleur" ndx=' + i + ' class="add_manual_ctrl_but btn-default fa fa-check-circle-o " style="font-size: 2.3em;color : green;cursor:pointer;padding: 4px;text-decoration:none;"></a>';
+                newRow += '<a id="actionbutton' + i + '" title="Cliquez pour ne pas intègrer ce controleur" ndx=' + i + ' class="add_manual_ctrl_but btn-default fa fa-check-circle-o" style="font-size: 2.3em;color : green;cursor:pointer;padding: 4px;text-decoration:none;"></a>';
             } else {
                 newRow += '<a id="actionbuttonB' + i + '" title="La version de ce controleur n\'est pas correcte" ndx=' + i + ' class="add_manual_ctrl_but btn-default fa fa-times-circle-o" style="font-size: 2.3em;color : red;cursor:pointer;padding: 4px;text-decoration:none;"></a>';
             }
@@ -185,13 +185,14 @@ function step2AddCtrl(handler) {
     });
     $("#ctrl_form").valid();
     $("input[name=ipman]").focus();
-    
+
 }
 
 function step3Process(resp) {
     console.dir("step", resp);
     console.dir("deconzList", deconzList);
-    var i;
+
+    $("#apiKeyTable>tbody:last").empty();
     var help = '<b><span style="text-decoration: underline;">Etape 2:</span></b><br>';
     help += 'Une demande automatique de la clé sera effectuée,';
     help += 'si la demande automatique echoue vous serez invité';
@@ -199,17 +200,39 @@ function step3Process(resp) {
     setHelp(help);
     $(".next-form").addClass("disabled");
     if (resp.state === "ok") {
-        $("#apiKeyTable>tbody:last").empty();
-        $("#div_configurationAlert").showAlert({message: '{{Clé(s) API obtenue(s)}}', level: 'success'});
-        $(".progress-bar").css({'background': 'SteelBlue'});
+        var i;
+        var canRefreshApiKey = false;
+        var letNext = false;
         for (i = 0; i < deconzList.length; i++) {
-            deconzList[i].apikey = resp.result[deconzList[i].internalipaddress].apikey;
+            if (resp.result[deconzList[i].internalipaddress].state === "ok") {
+                $("#apiKeyTable>tbody:last").empty();
+                $("#div_configurationAlert").showAlert({message: '{{Clé(s) API obtenue(s)}}', level: 'success'});
+                $(".progress-bar").css({'background': 'SteelBlue'});
+                letNext = true;
+                deconzList[i].apikey = resp.result[deconzList[i].internalipaddress].apikey;
+            } else
+            {
+                if (resp.result[deconzList[i].internalipaddress].error === 403) {
+                    $("#div_configurationAlert").showAlert({message: '{{Accès refusé}} : ' + 'Erreur : ' + resp.url + ' : ' + resp.result, level: 'warning'});
+                    $(".progress-bar").css({'background': 'orange'});
+                    canRefreshApiKey = true;
+                    deconzList[i].apikey = "{{Accès refusé}}";
+                }
+            }
             var newRow = '<tr>';
-            newRow += '<td style="padding: 8px;"><div class="form-group" align="center">';
-            newRow += '<a id="actionbuttonapikey' + i + '" title="Cliquez pour lancer une demande de clé manuelle" ndx=' + i + ' class="add_manual_ctrl_but btn btn-default fa fa-refresh disabled" style="font-size: 2.3em;color : SteelBlue;cursor:pointer;padding: 4px;text-decoration:none;"></a>';
+            newRow += '<td style="vertical-align:middle;"><div class="form-group" align="center">';
+            if (canRefreshApiKey) {
+                newRow += '<a id="actionbuttonapikey' + i + '" title="Cliquez pour lancer une demande de clé manuelle" ndx=' + i + ' class="add_manual_ctrl_but btn btn-default fa fa-refresh" style="font-size: 2.3em;color : SteelBlue;cursor:pointer;padding: 4px;text-decoration:none;"></a>';
+            } else {
+                newRow += '<a id="actionbuttonapikey' + i + '" title="Cliquez pour lancer une demande de clé manuelle" ndx=' + i + ' class="add_manual_ctrl_but btn btn-default fa fa-refresh disabled" style="font-size: 2.3em;color : SteelBlue;cursor:pointer;padding: 4px;text-decoration:none;"></a>';
+            }
             newRow += '</div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group" align="center">';
-            newRow += '<i id="apikeyStatus' + i + '" title="Contrôleur prêt à être intégré" ndx=' + i + ' class="add_manual_ctrl_but fa fa-exclamation-circle" style="font-size: 2.3em;color : ForestGreen;cursor:pointer;padding: 4px;"></i>';
+            if (canRefreshApiKey) {
+                newRow += '<i id="apikeyStatus' + i + '" title="Contrôleur prêt à être intégré" ndx=' + i + ' class="add_manual_ctrl_but fa fa-exclamation-circle" style="font-size: 2.3em;color : orange;cursor:pointer;padding: 4px;"></i>';
+            } else {
+                newRow += '<i id="apikeyStatus' + i + '" title="Contrôleur prêt à être intégré" ndx=' + i + ' class="add_manual_ctrl_but fa fa-exclamation-circle" style="font-size: 2.3em;color : ForestGreen;cursor:pointer;padding: 4px;"></i>';
+            }
             newRow += '</div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="id' + i + '" class="form-control" required id="id' + i + '" name="id" placeholder="Id" value="' + deconzList[i].bridgeid + '"></div></td>';
             newRow += '<td style="padding: 8px;"><div class="form-group"><input readonly type="name' + i + '" class="form-control" required id="name' + i + '" name="name" placeholder="Nom" value="' + deconzList[i].name + '"></div></td>';
@@ -218,8 +241,18 @@ function step3Process(resp) {
             newRow += '<td style="padding: 8px;" class="col-sm-2"><div class="form-group"><input readonly type="internalport" class="form-control" required id="internalport' + i + '" name="internalport" placeholder="Port" value="' + deconzList[i].apikey + '"></div></td>';
             newRow += '</tr>';
             $("#apiKeyTable>tbody:last").append(newRow);
+
         }
-        $(".next-form").removeClass("disabled");
+        if (letNext) {
+            $(".next-form").removeClass("disabled");
+        } else
+        {
+            $("#apicancelreason").html('<i class="fa fa-exclamation-triangle" style="color:red;"></i><font color="white"> Aucun contrôleur intégrable.</font>');
+            var hauteur= $("#apicancelreason").height();
+            console.dir("heut : ",hauteur);
+
+
+        }
     } else if (resp.state === "nok") {
         $("#div_configurationAlert").showAlert({message: '{{Impossible d\'obtenir une clé API}} : ' + 'Erreur : ' + resp.url + ' : ' + resp.error + ' (" + resp.code + ")', level: 'danger'});
         $(".progress-bar").css({'background': 'red'});
@@ -255,7 +288,7 @@ function validCtrl(resp) {
 
 }
 
-function setHelp(help) {    
+function setHelp(help) {
     $("#stepHelp").html(help);
 }
 
